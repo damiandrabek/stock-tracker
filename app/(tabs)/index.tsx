@@ -16,7 +16,7 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome nigger!</ThemedText>
+        <ThemedText type="title" className='bg-blue-400 text-green-400 text-5xl'>Welcome nigger!</ThemedText>
         <HelloWave />
         
       </ThemedView>
@@ -25,7 +25,7 @@ export default function HomeScreen() {
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
           Press{' '}
-          <ThemedText type="defaultSemiBold">
+          <ThemedText type="defaultSemiBold" >
             {Platform.select({
               ios: 'cmd + d',
               android: 'cmd + m',
