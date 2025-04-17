@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Text, View, Image, StyleSheet, Platform } from 'react-native';
+
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -7,74 +8,74 @@ import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" className='bg-blue-400 text-green-400 text-5xl'>Welcome nigger!</ThemedText>
-        <HelloWave />
-        <Image></Image>
-        
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold" >
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText className="text-2xl font-bold text-blue-500">
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+    <View style={styles.container}>
       <Image
-          source={require('@/assets/images/jan.png')}
-          style={styles.reactLogo}
-        />
-    </ParallaxScrollView>
+        source={require("@/assets/images/app-icon.png")}
+        style={styles.img}
+      />
+
+      <Text
+        style={styles.title}
+        className="text-cyan-400 text-9xl shadow-lg font-bold"
+      >
+        Stocks tracked
+      </Text>
+
+      <View>
+        <ThemedText style={styles.heading}>Your Watchlist 🔍</ThemedText>
+
+        <View style={styles.card}>
+          <Text>AAPL ~ 198$</Text>
+        </View>
+        <View style={styles.card}>
+          <Text>MSFT ~ 369$</Text>
+        </View>
+        <View style={styles.card}>
+          <Text>AMZN ~ 173$</Text>
+        </View>
+
+        <View className="flex w-96  shadow-md ">
+          <ThemedText style={styles.heading}>Market News 🚨</ThemedText>
+          <ThemedText>
+            UnitedHealth stock is crushing down the Dow. Here's the math behind
+            the slide.
+          </ThemedText>
+          <ThemedText>
+            Apple CEO spoke with Lutnick about tariff impact on iPhone prices,
+            WP says.
+          </ThemedText>
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontWeight: 'bold',
+    fontSize: 44,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 20,
+    textAlign: 'center',
   },
+  card: {
+    backgroundColor: '#eee',
+    padding: 20,
+    marginVertical: 5,
+    boxShadow: '4px 4px rgba(0, 0, 0, 0.1)'
+  },
+  img: {
+    width: 200,
+    height: 200,
+    borderRadius: 50,
+    marginBottom: 20
+  }
 });
