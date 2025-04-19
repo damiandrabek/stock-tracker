@@ -1,5 +1,7 @@
 import { Text, View, Image, StyleSheet, Platform } from 'react-native';
 
+import { Link } from 'expo-router'
+
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -9,42 +11,52 @@ import { ThemedView } from '@/components/ThemedView';
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Image
+      {/* <Image
         source={require("@/assets/images/app-icon.png")}
         style={styles.img}
-      />
+      /> */}
 
       <Text
         style={styles.title}
-        className="text-cyan-400 text-9xl shadow-lg font-bold"
+        className="text-cyan-400 text-6xl shadow-lg font-bold"
       >
         Stocks tracked
       </Text>
 
       <View>
-        <ThemedText style={styles.heading}>Your Watchlist 🔍</ThemedText>
+        <Link href="/watchlist" style={styles.heading}>
+          <ThemedText style={styles.heading}>Your Watchlist 🔍</ThemedText>
+        </Link>
 
         <View style={styles.card}>
           <Text>AAPL ~ 198$</Text>
         </View>
+
         <View style={styles.card}>
           <Text>MSFT ~ 369$</Text>
         </View>
+
         <View style={styles.card}>
           <Text>AMZN ~ 173$</Text>
         </View>
 
-        <View className="flex w-96  shadow-md ">
-          <ThemedText style={styles.heading}>Market News 🚨</ThemedText>
-          <ThemedText>
-            UnitedHealth stock is crushing down the Dow. Here's the math behind
-            the slide.
-          </ThemedText>
-          <ThemedText>
-            Apple CEO spoke with Lutnick about tariff impact on iPhone prices,
-            WP says.
-          </ThemedText>
-        </View>
+        <Text className="p-2 rounded-xl border border-white bg-black text-white">
+          Search
+        </Text>
+      </View>
+
+      <View className="flex w-96  shadow-md">
+        <ThemedText style={styles.heading}>Market News 🚨</ThemedText>
+
+        <ThemedText>
+          UnitedHealth stock is crushing down the Dow. Here's the math behind
+          the slide.
+        </ThemedText>
+
+        <ThemedText>
+          Apple CEO spoke with Lutnick about tariff impact on iPhone prices, WP
+          says.
+        </ThemedText>
       </View>
     </View>
   );

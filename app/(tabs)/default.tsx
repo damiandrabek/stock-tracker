@@ -22,9 +22,8 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText
           type="title"
-          
         >
-          Welcome nigger!
+          Welcome!
         </ThemedText>
 
         <HelloWave />
