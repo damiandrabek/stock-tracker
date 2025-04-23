@@ -1,4 +1,4 @@
-import { Text, View, Image, StyleSheet, Platform } from 'react-native';
+import { Text, View, Image, StyleSheet, Platform, ScrollView } from 'react-native';
 
 import { Link } from 'expo-router'
 
@@ -10,7 +10,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.contentContainer}>
       {/* <Image
         source={require("@/assets/images/app-icon.png")}
         style={styles.img}
@@ -58,15 +58,15 @@ export default function HomeScreen() {
           says.
         </ThemedText>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
