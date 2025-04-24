@@ -1,69 +1,152 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import { fetchStockData } from '@/services/fetchStock';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { LineChart } from "react-native-chart-kit";
+import { fetchStockData, TimeSeriesData } from "@/services/fetchStock";
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get("window").width;
 
-export default function StockScreen() {
+const SYMBOLS = ["AAPL", "GOOG", "MSFT", "TSLA", "ZONE"];
+const INTERVALS = ["1min", "5min", "15min", "30min", "60min"];
+
+const StockScreen: React.FC = () => {
+  const [symbol, setSymbol] = useState<string>("AAPL");
+  const [interval, setInterval] = useState<string>("5min");
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const loadStockData = async () => {
+    setLoading(true);
+    const data = await fetchStockData(symbol, interval);
+    const key = `Time Series (${interval})` as keyof typeof data;
+
+    if (data && data[key]) {
+      const timeSeries: TimeSeriesData = data[key]!;
+      const times = Object.keys(timeSeries).slice(0, 10).reverse();
+      const values = times.map((time) =>
+        parseFloat(timeSeries[time]["1. open"])
+      );
+
+      setLabels(times.map((t) => t.split(" ")[1] ?? t));
+      setPrices(values);
+    } else {
+      setLabels([]);
+      setPrices([]);
+    }
+
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const getStock = async () => {
-      const data = await fetchStockData('AAPL');
-
-      if (data && data['Time Series (5min)']) {
-        const times = Object.keys(data['Time Series (5min)']).slice(0, 10).reverse(); // latest 10 entries
-        const values = times.map((time) =>
-          parseFloat(data['Time Series (5min)']![time]['1. open'])
-        );
-
-        setLabels(times.map((time) => time.split(' ')[1])); // only time part
-        setPrices(values);
-      }
-
-      setLoading(false);
-    };
-
-    getStock();
-  }, []);
-
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" />
-        <Text>Loading chart...</Text>
-      </View>
-    );
-  }
+    loadStockData();
+  }, [symbol, interval]);
 
   return (
-    <ScrollView className="p-4">
-      <Text className="text-xl font-bold mb-4">AAPL Intraday (5min) Prices</Text>
-      <LineChart
-        data={{
-          labels: labels,
-          datasets: [{ data: prices }],
-        }}
-        width={screenWidth - 32}
-        height={220}
-        yAxisSuffix="$"
-        chartConfig={{
-          backgroundColor: '#1c1c1e',
-          backgroundGradientFrom: '#1c1c1e',
-          backgroundGradientTo: '#333',
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(0, 230, 118, ${opacity})`,
-          labelColor: () => '#ffffff',
-          style: {
-            borderRadius: 16,
-          },
-        }}
-        bezier
-        style={{ borderRadius: 16 }}
-      />
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.heading}>📈 Stock Tracker</Text>
+
+      <Text style={styles.label}>Select Symbol:</Text>
+      <Picker
+        selectedValue={symbol}
+        onValueChange={setSymbol}
+        style={styles.picker}
+      >
+        {SYMBOLS.map((s) => (
+          <Picker.Item key={s} label={s} value={s} />
+        ))}
+      </Picker>
+
+      <Text style={styles.label}>Select Interval:</Text>
+      <Picker
+        selectedValue={interval}
+        onValueChange={setInterval}
+        style={styles.picker}
+      >
+        {INTERVALS.map((i) => (
+          <Picker.Item key={i} label={i} value={i} />
+        ))}
+      </Picker>
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#00e676" />
+          <Text style={styles.loadingText}>Loading chart...</Text>
+        </View>
+      ) : prices.length > 0 ? (
+        <LineChart
+          data={{
+            labels,
+            datasets: [{ data: prices }],
+          }}
+          width={screenWidth - 32}
+          height={220}
+          yAxisSuffix="$"
+          chartConfig={{
+            backgroundColor: "#1c1c1e",
+            backgroundGradientFrom: "#1c1c1e",
+            backgroundGradientTo: "#333",
+            decimalPlaces: 2,
+            color: (opacity = 1) => `rgba(0, 230, 118, ${opacity})`,
+            labelColor: () => "#ffffff",
+            style: {
+              borderRadius: 16,
+            },
+          }}
+          bezier
+          style={{ borderRadius: 16 }}
+        />
+      ) : (
+        <Text style={styles.noDataText}>
+          No data available. Try another symbol or interval.
+        </Text>
+      )}
     </ScrollView>
   );
-}
+};
+
+export default StockScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    paddingBottom: 40,
+    backgroundColor: "#000",
+    flexGrow: 1,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 12,
+  },
+  label: {
+    color: "white",
+    marginBottom: 4,
+  },
+  picker: {
+    color: "white",
+    backgroundColor: "#333",
+    marginBottom: 16,
+  },
+  loadingContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 8,
+    color: "white",
+  },
+  noDataText: {
+    color: "white",
+    textAlign: "center",
+    marginTop: 24,
+  },
+});

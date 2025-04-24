@@ -13,35 +13,8 @@ import { fetchStockData } from '@/services/fetchStock';
 
 export default function HomeScreen() {
 
-  const [stockData, setStockData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const getStock = async () => {
-      const data = await fetchStockData('AAPL');
-      setStockData(data);
-      setLoading(false);
-    };
-
-    getStock();
-  }, []);
-
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" />
-        <Text>Loading Stock Data...</Text>
-      </View>
-    );
-  }
-
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
-
-      <Text className="text-xl font-bold mb-2">Stock Data for AAPL</Text>
-        <Text selectable className="text-xs font-mono">
-          {JSON.stringify(stockData, null, 2)}
-      </Text>
 
       {/* <Image
         source={require("@/assets/images/app-icon.png")}
