@@ -1,16 +1,48 @@
-import { Text, View, Image, StyleSheet, Platform, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+
+import { Text, View, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 
 import { Link } from 'expo-router'
-
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+import { fetchStockData } from '@/services/fetchStock';
+
 export default function HomeScreen() {
+
+  const [stockData, setStockData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const getStock = async () => {
+      const data = await fetchStockData('AAPL');
+      setStockData(data);
+      setLoading(false);
+    };
+
+    getStock();
+  }, []);
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" />
+        <Text>Loading Stock Data...</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
+
+      <Text className="text-xl font-bold mb-2">Stock Data for AAPL</Text>
+        <Text selectable className="text-xs font-mono">
+          {JSON.stringify(stockData, null, 2)}
+      </Text>
+
       {/* <Image
         source={require("@/assets/images/app-icon.png")}
         style={styles.img}
