@@ -3,7 +3,7 @@
     "name": "stocks-tracker",
     "slug": "stocks-tracker",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/app-icon.png",
     "scheme": "stock-tracker",
     "userInterfaceStyle": "automatic",

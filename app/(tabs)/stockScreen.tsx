@@ -7,6 +7,11 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+
+
 import { Picker } from "@react-native-picker/picker";
 import { LineChart } from "react-native-chart-kit";
 import { fetchStockData, TimeSeriesData } from "@/services/fetchStock";
@@ -51,9 +56,9 @@ const StockScreen: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>📈 Stock Tracker</Text>
+      <ThemedText style={styles.heading}>📈 Stock Tracker</ThemedText>
 
-      <Text style={styles.label}>Select Symbol:</Text>
+      <ThemedText style={styles.label}>Select Symbol:</ThemedText>
       <Picker
         selectedValue={symbol}
         onValueChange={setSymbol}
@@ -64,7 +69,7 @@ const StockScreen: React.FC = () => {
         ))}
       </Picker>
 
-      <Text style={styles.label}>Select Interval:</Text>
+      <ThemedText style={styles.label}>Select Interval:</ThemedText>
       <Picker
         selectedValue={interval}
         onValueChange={setInterval}
@@ -76,10 +81,10 @@ const StockScreen: React.FC = () => {
       </Picker>
 
       {loading ? (
-        <View style={styles.loadingContainer}>
+        <ThemedView style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#00e676" />
-          <Text style={styles.loadingText}>Loading chart...</Text>
-        </View>
+          <ThemedText style={styles.loadingText}>Loading chart...</ThemedText>
+        </ThemedView>
       ) : prices.length > 0 ? (
         <LineChart
           data={{
@@ -104,9 +109,9 @@ const StockScreen: React.FC = () => {
           style={{ borderRadius: 16 }}
         />
       ) : (
-        <Text style={styles.noDataText}>
+        <ThemedText style={styles.noDataText}>
           No data available. Try another symbol or interval.
-        </Text>
+        </ThemedText>
       )}
     </ScrollView>
   );
