@@ -105,7 +105,7 @@ const StockScreen: React.FC = () => {
               borderRadius: 16,
             },
           }}
-          bezier
+          //bezier
           style={{ borderRadius: 16 }}
         />
       ) : (
