@@ -1,50 +1,75 @@
-# Welcome to your Expo app 👋
+# Stock Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A web-based application designed for a high school programming seminar to help students learn about coding, stock tracking, and real-time data visualization using TypeScript and JavaScript.
 
-## Get started
+## Overview
 
-1. Install dependencies
+Stock Tracker allows users to search for stocks, view their latest prices, and watch price trends over time. This project is built as an educational tool, demonstrating how to work with APIs, manage state, and build interactive front-end interfaces.
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **Stock Search**: Find real-time data for a wide range of stocks.
+- **Price Charting**: Visualize price trends with dynamic charts.
+- **Watchlist**: Add stocks to a personal watchlist for quick reference.
+- **Responsive Design**: Works well on both desktop and mobile devices.
+- **Educational Code**: Codebase is structured for learning, with comments and logical separation of concerns.
 
-   ```bash
-   npx expo start
-   ```
+## Technologies Used
 
-In the output, you'll find options to open the app in a
+- **TypeScript** (86.4%)
+- **JavaScript** (13.6%)
+- [React](https://react.dev/) (likely, if using a modern TypeScript setup)
+- [Charting Library] (e.g., Chart.js or similar, if data visualization is present)
+- [Stock Data API] (replace with actual provider, e.g., Alpha Vantage, Finnhub, or Yahoo Finance)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Getting Started
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Prerequisites
 
-## Get a fresh project
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-When you're ready, run:
+### Installation
 
 ```bash
-npm run reset-project
+git clone https://github.com/damiandrabek/stock-tracker.git
+cd stock-tracker
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Running the App
 
-## Learn more
+```bash
+npm start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+This will start the development server. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Project Structure
 
-## Join the community
+```
+src/
+  components/      # React components (UI, charts, etc.)
+  services/        # API calls and data fetching
+  utils/           # Helper functions and utilities
+  App.tsx          # Main application entry point
+  index.tsx        # ReactDOM render
+```
 
-Join our community of developers creating universal apps.
+## Educational Notes
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- The code is organized and commented for educational clarity.
+- Key TypeScript and JavaScript concepts are demonstrated.
+- Students are encouraged to tinker with features, add enhancements, and experiment!
+
+## Contributing
+
+Contributions are welcome, especially from students! Feel free to fork the repo, create pull requests, or open issues for feedback.
+
+## License
+
+This project is for educational use and is licensed under the MIT License.
+
+---
+
+**Created for the High School Programming Seminar.**
