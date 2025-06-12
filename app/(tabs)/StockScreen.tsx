@@ -185,7 +185,7 @@ const styles = (isDark: boolean) =>
       textAlign: "center",
     },
     pickerCard: {
-      backgroundColor: isDark ? "#232946" : "#fff",
+      backgroundColor: isDark ? "#2d2e59" : "#fff",
       borderRadius: 14,
       borderWidth: 1,
       borderColor: isDark ? "#393e46" : "#e9ecef",
@@ -207,9 +207,10 @@ const styles = (isDark: boolean) =>
       height: 48,
     },
     pickerItem: {
-      fontSize: 16,
+      fontSize: 20,
       height: 48,
-      color: isDark ? "#181926" : "#232946",
+      fontWeight: "500",
+      color: isDark ? "#9ee1e8" : "#232946",
       textAlign: "center",
     },
     loadingContainer: {
