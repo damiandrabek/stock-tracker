@@ -1,7 +1,7 @@
 // utils/fetchStock.ts
 import axios from 'axios';
 
-const API_KEY = 'YOUR_API_KEY_HERE'; // 🔒 Replace with your actual Alpha Vantage key
+const API_KEY = process.env.ALPHA_VANTAGE_API_KEY!;
 
 export interface TimeSeriesData {
   [timestamp: string]: {
