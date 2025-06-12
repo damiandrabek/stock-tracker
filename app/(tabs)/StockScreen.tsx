@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  Dimensions,
-  ScrollView,
   ActivityIndicator,
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
+  Text,
+  useColorScheme,
+  View,
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-
-
+import { fetchStockData, TimeSeriesData } from "@/utils/fetchStock";
 import { Picker } from "@react-native-picker/picker";
 import { LineChart } from "react-native-chart-kit";
-import { fetchStockData, TimeSeriesData } from "@/utils/fetchStock";
-
-const screenWidth = Dimensions.get("window").width;
 
 const SYMBOLS = ["AAPL", "GOOG", "MSFT", "TSLA", "ZONE"];
 const INTERVALS = ["1min", "5min", "15min", "30min", "60min"];
+const CHART_WIDTH = Math.min(Dimensions.get("window").width - 32, 380);
 
 const StockScreen = () => {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+  const themedStyles = styles(isDark);
+
   const [symbol, setSymbol] = useState<string>("AAPL");
   const [interval, setInterval] = useState<string>("5min");
   const [labels, setLabels] = useState<string[]>([]);
@@ -52,106 +55,219 @@ const StockScreen = () => {
 
   useEffect(() => {
     loadStockData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [symbol, interval]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ThemedText style={styles.heading}>📈 Stock Tracker</ThemedText>
+    <SafeAreaView style={themedStyles.safeArea}>
+      <ScrollView contentContainerStyle={themedStyles.container}>
+        <ThemedText style={themedStyles.heading}>📈 Stock Tracker</ThemedText>
 
-      <ThemedText style={styles.label}>Select Symbol:</ThemedText>
-      <Picker
-        selectedValue={symbol}
-        onValueChange={setSymbol}
-        style={styles.picker}
-      >
-        {SYMBOLS.map((s) => (
-          <Picker.Item key={s} label={s} value={s} />
-        ))}
-      </Picker>
+        <ThemedText style={themedStyles.label}>Select Symbol:</ThemedText>
+        <View style={themedStyles.pickerCard}>
+          <Picker
+            selectedValue={symbol}
+            onValueChange={setSymbol}
+            style={themedStyles.picker}
+            dropdownIconColor={isDark ? "#a6e3e9" : "#3a5a40"}
+            itemStyle={themedStyles.pickerItem}
+          >
+            {SYMBOLS.map((s) => (
+              <Picker.Item key={s} label={s} value={s} />
+            ))}
+          </Picker>
+        </View>
 
-      <ThemedText style={styles.label}>Select Interval:</ThemedText>
-      <Picker
-        selectedValue={interval}
-        onValueChange={setInterval}
-        style={styles.picker}
-      >
-        {INTERVALS.map((i) => (
-          <Picker.Item key={i} label={i} value={i} />
-        ))}
-      </Picker>
+        <ThemedText style={themedStyles.label}>Select Interval:</ThemedText>
+        <View style={themedStyles.pickerCard}>
+          <Picker
+            selectedValue={interval}
+            onValueChange={setInterval}
+            style={themedStyles.picker}
+            dropdownIconColor={isDark ? "#a6e3e9" : "#3a5a40"}
+            itemStyle={themedStyles.pickerItem}
+          >
+            {INTERVALS.map((i) => (
+              <Picker.Item key={i} label={i} value={i} />
+            ))}
+          </Picker>
+        </View>
 
-      {loading ? (
-        <ThemedView style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#00e676" />
-          <ThemedText style={styles.loadingText}>Loading chart...</ThemedText>
-        </ThemedView>
-      ) : prices.length > 0 ? (
-        <LineChart
-          data={{
-            labels,
-            datasets: [{ data: prices }],
-          }}
-          width={screenWidth - 32}
-          height={220}
-          yAxisSuffix="$"
-          chartConfig={{
-            backgroundColor: "#1c1c1e",
-            backgroundGradientFrom: "#1c1c1e",
-            backgroundGradientTo: "#333",
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 230, 118, ${opacity})`,
-            labelColor: () => "#ffffff",
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          //bezier
-          style={{ borderRadius: 16 }}
-        />
-      ) : (
-        <ThemedText style={styles.noDataText}>
-          No data available. Try another symbol or interval.
-        </ThemedText>
-      )}
-    </ScrollView>
+        {loading ? (
+          <ThemedView style={themedStyles.loadingContainer}>
+            <ActivityIndicator size="large" color={isDark ? "#a6e3e9" : "#3a5a40"} />
+            <ThemedText style={themedStyles.loadingText}>Loading chart...</ThemedText>
+          </ThemedView>
+        ) : prices.length > 0 ? (
+          <View style={themedStyles.chartRow}>
+            <View style={themedStyles.yAxisLabelContainer}>
+              <Text style={themedStyles.yAxisLabel}>Price ($)</Text>
+            </View>
+            <View>
+              <View style={themedStyles.chartCard}>
+                <LineChart
+                  data={{
+                    labels: labels.map((l, idx) =>
+                      idx % 2 === 0 ? l : "" // Show every other label to reduce overlap
+                    ),
+                    datasets: [{ data: prices }],
+                  }}
+                  width={CHART_WIDTH}
+                  height={220}
+                  yAxisSuffix="$"
+                  chartConfig={{
+                    backgroundColor: isDark ? "#232946" : "#fff",
+                    backgroundGradientFrom: isDark ? "#232946" : "#fff",
+                    backgroundGradientTo: isDark ? "#181926" : "#f7f8fa",
+                    decimalPlaces: 2,
+                    color: (opacity = 1) =>
+                      isDark
+                        ? `rgba(166, 227, 233, ${opacity})`
+                        : `rgba(58, 90, 64, ${opacity})`,
+                    labelColor: () => (isDark ? "#b8c1ec" : "#495057"),
+                    style: {
+                      borderRadius: 16,
+                    },
+                    propsForDots: {
+                      r: "4",
+                      strokeWidth: "2",
+                      stroke: isDark ? "#a6e3e9" : "#3a5a40",
+                    },
+                    propsForBackgroundLines: {
+                      stroke: isDark ? "#393e46" : "#e9ecef",
+                    },
+                  }}
+                  // bezier
+                  style={themedStyles.chart}
+                />
+              </View>
+              <Text style={themedStyles.xAxisLabel}>Time</Text>
+            </View>
+          </View>
+        ) : (
+          <ThemedText style={themedStyles.noDataText}>
+            No data available. Try another symbol or interval.
+          </ThemedText>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default StockScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    paddingBottom: 40,
-    backgroundColor: "#000",
-    flexGrow: 1,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-    marginBottom: 12,
-  },
-  label: {
-    color: "white",
-    marginBottom: 4,
-  },
-  picker: {
-    color: "white",
-    backgroundColor: "#333",
-    marginBottom: 16,
-  },
-  loadingContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  loadingText: {
-    marginTop: 8,
-    color: "white",
-  },
-  noDataText: {
-    color: "white",
-    textAlign: "center",
-    marginTop: 24,
-  },
-});
+const styles = (isDark: boolean) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: isDark ? "#181926" : "#f7f8fa",
+    },
+    container: {
+      padding: 16,
+      paddingBottom: 40,
+      backgroundColor: isDark ? "#181926" : "#f7f8fa",
+      flexGrow: 1,
+      alignItems: "center",
+    },
+    heading: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: isDark ? "#a6e3e9" : "#3a5a40",
+      marginBottom: 28,
+      textAlign: "center",
+      marginTop: 36, // More margin for notch
+    },
+    label: {
+      color: isDark ? "#b8c1ec" : "#495057",
+      marginBottom: 4,
+      fontSize: 16,
+      fontWeight: "500",
+      textAlign: "center",
+    },
+    pickerCard: {
+      backgroundColor: isDark ? "#232946" : "#fff",
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: isDark ? "#393e46" : "#e9ecef",
+      marginBottom: 18,
+      width: 320,
+      alignSelf: "center",
+      overflow: "hidden",
+      justifyContent: "center",
+      height: 48,
+      shadowColor: isDark ? "#000" : "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
+    },
+    picker: {
+      color: isDark ? "#181926" : "#232946",
+      width: "100%",
+      height: 48,
+    },
+    pickerItem: {
+      fontSize: 16,
+      height: 48,
+      color: isDark ? "#181926" : "#232946",
+      textAlign: "center",
+    },
+    loadingContainer: {
+      marginTop: 20,
+      alignItems: "center",
+    },
+    loadingText: {
+      marginTop: 8,
+      color: isDark ? "#b8c1ec" : "#495057",
+    },
+    noDataText: {
+      color: isDark ? "#b8c1ec" : "#495057",
+      textAlign: "center",
+      marginTop: 24,
+    },
+    chartRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 24,
+      marginBottom: 32,
+      width: "100%",
+      justifyContent: "center",
+    },
+    yAxisLabelContainer: {
+      height: 220,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 4,
+      width: 28,
+    },
+    yAxisLabel: {
+      color: isDark ? "#b8c1ec" : "#495057",
+      fontSize: 16,
+      fontWeight: "600",
+      transform: [{ rotate: "-90deg" }],
+      textAlign: "center",
+      width: 120,
+    },
+    chartCard: {
+      backgroundColor: isDark ? "#232946" : "#fff",
+      borderRadius: 20,
+      padding: 8,
+      shadowColor: isDark ? "#000" : "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
+      alignSelf: "center",
+    },
+    chart: {
+      borderRadius: 16,
+      backgroundColor: "transparent",
+    },
+    xAxisLabel: {
+      textAlign: "center",
+      marginTop: 8,
+      color: isDark ? "#b8c1ec" : "#495057",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+  });

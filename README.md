@@ -56,12 +56,6 @@ src/
   index.tsx        # ReactDOM render
 ```
 
-## Educational Notes
-
-- The code is organized and commented for educational clarity.
-- Key TypeScript and JavaScript concepts are demonstrated.
-- Students are encouraged to tinker with features, add enhancements, and experiment!
-
 ## Contributing
 
 Contributions are welcome, especially from students! Feel free to fork the repo, create pull requests, or open issues for feedback.
