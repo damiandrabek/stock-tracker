@@ -1,7 +1,9 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
 
-const API_KEY = Constants.expoConfig?.extra?.ALPHA_VANTAGE_API_KEY as string;
+// const API_KEY = Constants.expoConfig?.extra?.ALPHA_VANTAGE_API_KEY as string;
+const API_KEY = 'KOKOT';
+
 
 export interface TimeSeriesData {
   [timestamp: string]: {

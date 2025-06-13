@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
 
-export default function SignIn() {
+export default function Profile() {
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
