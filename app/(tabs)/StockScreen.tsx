@@ -12,9 +12,11 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { fetchStockData, TimeSeriesData } from "@/utils/fetchStock";
 import { Picker } from "@react-native-picker/picker";
 import { LineChart } from "react-native-chart-kit";
+
+import { fetchStockData, TimeSeriesData } from "@/services/fetchStockData";
+
 
 const SYMBOLS = ["AAPL", "GOOG", "MSFT", "TSLA", "ZONE"];
 const INTERVALS = ["1min", "5min", "15min", "30min", "60min"];

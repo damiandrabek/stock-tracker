@@ -9,8 +9,6 @@ import { View, Text, Image, ImageBackground, Platform } from 'react-native';
 
 import { AuthProvider } from '@/context/AuthContext';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -20,7 +18,7 @@ const TabIcon = ({focused, icon, title}: any) => {
     return (
       <ImageBackground
         source={images.highlight}
-        className="flex flex-row w-full flex-1 min-w-[112px] min-h-12 mt-4 justify-center items-center rounded-full overflow-hidden"
+        className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden"
       >
         <Image source={icon} tintColor="#151312" className="size-5" />
 
@@ -54,7 +52,6 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarItemStyle: {
           width: "100%",
