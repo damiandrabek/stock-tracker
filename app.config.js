@@ -1,8 +1,11 @@
+import 'dotenv/config';
 export default {
   expo: {
-    // ...other config...
     extra: {
       ALPHA_VANTAGE_API_KEY: process.env.ALPHA_VANTAGE_API_KEY,
+
+      FINNHUB_API_KEY: process.env.FINNHUB_API_KEY,
+
       
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
