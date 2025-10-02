@@ -18,7 +18,7 @@ import { LineChart } from "react-native-chart-kit";
 import { fetchStockData, TimeSeriesData } from "@/services/fetchStockData";
 
 
-const SYMBOLS = ["AAPL", "GOOG", "MSFT", "TSLA", "ZONE"];
+const SYMBOLS = ["AAPL", "GOOG", "MSFT", "TSLA", "ZONE", 'ASML'];
 const INTERVALS = ["1min", "5min", "15min", "30min", "60min"];
 const CHART_WIDTH = Math.min(Dimensions.get("window").width - 32, 380);
 

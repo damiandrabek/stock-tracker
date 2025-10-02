@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 
-const tickerWatchlist = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'NVDA', 'META', 'BRK.B', 'JPM', 'V'];
+const tickerWatchlist = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'NVDA', 'META', 'BRK.B', 'JPM', 'V', 'ASML'];
 const randomTicker = tickerWatchlist[Math.floor(Math.random() * tickerWatchlist.length)];
 
 
