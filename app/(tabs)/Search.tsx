@@ -8,6 +8,7 @@ import { images } from "@/constants/images";
 import SearchBar from "@/components/SearchBar";
 import { fetchStocksForLookUp } from "@/services/api";
 import useFetch from "@/services/useFetch";
+import { updateSearchCount } from "@/services/appwrite";
 
 export const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,9 +29,16 @@ export const Search = () => {
 
   // Debounce search
   useEffect(() => {
+
+    
+
     const timeoutID = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadSearchStocks();
+
+        if (stocks && stocks.length > 0 && stocks?.[0]) {
+          await updateSearchCount(searchQuery, stocks[0]);
+        }
       } else {
         reset();
       }

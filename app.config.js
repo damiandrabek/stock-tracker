@@ -6,6 +6,7 @@ export default {
 
       FINNHUB_API_KEY: process.env.FINNHUB_API_KEY,
 
+      APPWRITE_PROJECT_ID: process.env.APPWRITE_PROJECT_ID,
       
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
