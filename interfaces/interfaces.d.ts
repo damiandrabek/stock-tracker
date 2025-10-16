@@ -18,15 +18,15 @@ interface Stock {
   previousClosePrice: number;
 }
 
-interface TrendingMovie {
+interface TrendingStock {
   searchTerm: string;
-  movie_id: number;
-  title: string;
+  stock_id: number;
+  name: string;
   count: number;
-  poster_url: string;
+  logo: string;
 }
 
-interface MovieDetails {
+interface StockDetails {
   adult: boolean;
   backdrop_path: string | null;
   belongs_to_collection: {
@@ -75,6 +75,6 @@ interface MovieDetails {
 }
 
 interface TrendingCardProps {
-  movie: TrendingMovie;
+  stock: TrendingStock;
   index: number;
 }

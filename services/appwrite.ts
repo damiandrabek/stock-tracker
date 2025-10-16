@@ -37,20 +37,26 @@ export const updateSearchCount = async (query: string, stock: Stock) => {
         stock_id: stock.ticker,
         count: 1,
         name: stock.name,
-        weburl: `https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/${stock.weburl}.png`,
+        logo: `https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/${stock.weburl}.png`,
       });
     }
   } catch (error) {
     console.error("Error updating search count:", error);
     throw error;
+  }  
+}
+
+
+export const getTrendingStocks = async (): Promise<TrendingStock[] | undefined> => {
+  try {
+    const result = await databases.listDocuments(DATABASE_ID, TABLE_ID, [
+      Query.limit(5),
+      Query.orderDesc('count')
+    ])
+
+    return result.documents as unknown as TrendingStock[];
+  } catch (error) {
+    console.log(error);
+    return undefined;
   }
-
-  // chceck if the stock already exists in the database
-  // if a document with the stock symbol exists,
-    //  increment the search count
-  // if no document exists,
-    // create a new document with search count 1
-
-  
-  
 }

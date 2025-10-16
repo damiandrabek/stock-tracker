@@ -30,15 +30,9 @@ export const Search = () => {
   // Debounce search
   useEffect(() => {
 
-    
-
     const timeoutID = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadSearchStocks();
-
-        if (stocks && stocks.length > 0 && stocks?.[0]) {
-          await updateSearchCount(searchQuery, stocks[0]);
-        }
       } else {
         reset();
       }
@@ -46,6 +40,12 @@ export const Search = () => {
 
     return () => clearTimeout(timeoutID);
   }, [searchQuery]);
+
+  useEffect(() => {
+      if (stocks && stocks.length > 0 && stocks?.[0]) {
+        updateSearchCount(searchQuery, stocks[0]);
+      }
+  }, [stocks]);
 
   return (
     <View className="flex-1 bg-primary">

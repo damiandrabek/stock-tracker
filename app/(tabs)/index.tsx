@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useCallback } from "react";
+import React, { use, useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -19,12 +19,19 @@ import { images } from "@/constants/images";
 
 import SearchBar from "@/components/SearchBar";
 import StockCard from "@/components/StockCard";
+import { getTrendingStocks } from "@/services/appwrite";
+import TrendingCard from "@/components/TrendingCard";
 
 export default function HomeScreen() {
   const router = useRouter();
 
-  const fetchFn = useCallback(() => fetchStocksOnWatchlist(), []);
+  const {
+    data: trendingStocks,
+    loading: trendingStocksLoading,
+    error: trendingStocksError,
+  } = useFetch(getTrendingStocks);
 
+  const fetchFn = useCallback(() => fetchStocksOnWatchlist(), []);
   const {
     data: stocks,
     loading: stocksLoading,
@@ -48,14 +55,23 @@ export default function HomeScreen() {
           className="max-w-20 max-h-20 mt-20 mb-5 mx-auto"
         />
 
-        {stocksLoading ? (
+        {stocksLoading || trendingStocksLoading ? (
           <ActivityIndicator
             size="large"
             color="#0000ff"
             className="mt-10 self-center"
           />
-        ) : stocksError ? (
-          <Text>Error: {stocksError?.message}</Text>
+        ) : stocksError || trendingStocksError ? (
+          <Text>
+            Error:{" "}
+            {stocksError
+              ? stocksError.message
+              : typeof trendingStocksError === "string"
+              ? trendingStocksError
+              : trendingStocksError instanceof Error
+              ? trendingStocksError.message
+              : ""}
+          </Text>
         ) : (
           <View className="flex-1 mt-5">
             <SearchBar
@@ -63,7 +79,27 @@ export default function HomeScreen() {
               onPress={() => router.push("/search")}
             />
 
-            <>
+            {trendingStocks && (
+              <View className="mt-10">
+                <Text className="text-lg text-white font-bold mb-3">Trending Stocks</Text>
+
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View className="w-4"/>}
+                  data={trendingStocks}
+                  keyExtractor={(item) => item.stock_id.toString()}
+                  className="bb-4 mt-3"
+                  renderItem={({ item, index }) => (
+                    <TrendingCard 
+                      stock={item}
+                      index={index}  />
+                  )}
+                />
+              </View>
+            )}
+
+            <View>
               <Text className="text-lg text-white font-bold mt-5 mb-3">
                 Your Watchlist
               </Text>
@@ -82,7 +118,7 @@ export default function HomeScreen() {
                 className="mt-2 pb-32"
                 scrollEnabled={false}
               />
-            </>
+            </View>
           </View>
         )}
       </ScrollView>
