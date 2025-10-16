@@ -37,7 +37,7 @@ export const updateSearchCount = async (query: string, stock: Stock) => {
         stock_id: stock.ticker,
         count: 1,
         name: stock.name,
-        logo: `https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/${stock.weburl}.png`,
+        logo: stock.logo,
       });
     }
   } catch (error) {
