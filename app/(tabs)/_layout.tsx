@@ -1,17 +1,16 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import * as React from 'react';
 
 import { images } from "@/constants/images";
 import { icons } from "@/constants/icons";
 
 
-import { View, Text, Image, ImageBackground, Platform } from 'react-native';
+import { View, Text, Image, ImageBackground, Platform, useColorScheme } from 'react-native';
 
 import { AuthProvider } from '@/context/AuthContext';
 
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 const TabIcon = ({focused, icon, title}: any) => {
   if (focused) {
