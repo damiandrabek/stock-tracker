@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { use, useCallback } from "react";
+import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from "react-native";
 
@@ -19,6 +18,7 @@ import { images } from "@/constants/images";
 
 import SearchBar from "@/components/SearchBar";
 import StockCard from "@/components/StockCard";
+
 import { getTrendingStocks } from "@/services/appwrite";
 import TrendingCard from "@/components/TrendingCard";
 
@@ -37,9 +37,6 @@ export default function HomeScreen() {
     loading: stocksLoading,
     error: stocksError,
   } = useFetch(fetchFn, true);
-
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
 
   return (
     <View className="flex-1 bg-primary">

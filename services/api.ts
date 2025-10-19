@@ -184,11 +184,39 @@ export const fetchStocksForLookUp = async ({ query }: { query: string }) => {
   return data;
 };
 
-// export const fetchStockDetails = async (stockId: string): Promise<StockDetails> => {
-//   try {
-//     const response = await fetch()
-//   } catch (error) {
-//     console.log(error)
-//     throw error
-//   }
-// }
+export const fetchStockDetails = async (stockId: string): Promise<Stock> => {
+  
+  // Fetch profile
+  const profileEndpoint = `${FINNHUB_CONFIG.BASE_URL}/stock/profile2?symbol=${encodeURIComponent(stockId)}&token=${FINNHUB_CONFIG.API_KEY}`;
+  const profileRes = await fetch(profileEndpoint, {
+    method: "GET",
+    headers: FINNHUB_CONFIG.headers,
+  });
+  if (!profileRes.ok)
+    throw new Error(`Failed to fetch profile for: ${stockId}`);
+  const profile = await profileRes.json();
+
+  // Fetch quote
+  const quoteEndpoint = `${FINNHUB_CONFIG.BASE_URL}/quote?symbol=${encodeURIComponent(stockId)}&token=${FINNHUB_CONFIG.API_KEY}`;
+  const quoteRes = await fetch(quoteEndpoint, {
+    method: "GET",
+    headers: FINNHUB_CONFIG.headers,
+  });
+  if (!quoteRes.ok) throw new Error(`Failed to fetch quote for: ${stockId}`);
+  const quote = await quoteRes.json();
+
+  // merge and return
+  const data = await {
+    ...profile,
+    currentPrice: quote.c,
+    change: quote.d,
+    percentChange: quote.dp,
+    highPriceOfTheDay: quote.h,
+    lowPriceOfTheDay: quote.l,
+    openPriceOfTheDay: quote.o,
+    previousClosePrice: quote.pc,
+  };
+  
+  console.log("Fetched stock data:", data);
+  return data;
+}
