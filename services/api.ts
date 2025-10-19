@@ -183,3 +183,12 @@ export const fetchStocksForLookUp = async ({ query }: { query: string }) => {
   console.log("Fetched searched for stock data:", data);
   return data;
 };
+
+// export const fetchStockDetails = async (stockId: string): Promise<StockDetails> => {
+//   try {
+//     const response = await fetch()
+//   } catch (error) {
+//     console.log(error)
+//     throw error
+//   }
+// }

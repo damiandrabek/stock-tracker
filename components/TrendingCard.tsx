@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import * as React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
 import MaskedView from '@react-native-masked-view/masked-view';
 
@@ -23,7 +23,7 @@ const TrendingCard = ({ stock: { stock_id, name, logo }, index }: TrendingCardPr
         <View className="absolute bottom-9 -left-2 px-2 py-1 rounded-full">
           <MaskedView
             maskElement={
-              <Text className="font-bold text-white text-6xl">{index + 1}</Text>
+              <Text style={styles.shadowText} className="font-bold text-white text-6xl">{index + 1}</Text>
             }
           >
             <Image
@@ -47,3 +47,19 @@ const TrendingCard = ({ stock: { stock_id, name, logo }, index }: TrendingCardPr
 
 
 export default TrendingCard;
+
+const styles = StyleSheet.create({
+  shadowText: {
+    position: 'absolute',
+    zIndex: 1,
+    color: 'rgba(0,0,0,0.95)', // shadow color
+    fontWeight: '800',
+    // slight offset to create shadow effect
+    left: 4,
+    top: 4,
+    // extra text shadow (iOS / Android support varies)
+    textShadowColor: 'rgba(0,0,0,0.6)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
+  },
+});

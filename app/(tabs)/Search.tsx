@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, Text, View, ScrollView } from "react-native";
 
 import StockCard from "@/components/StockCard";
 import { icons } from "@/constants/icons";
@@ -55,7 +55,36 @@ export const Search = () => {
         resizeMode="cover"
       />
 
-      <FlatList
+        <View className="w-full flex-row justify-center mt-20 items-center">
+          <Image source={icons.logo} className="max-w-20 max-h-20" />
+        </View>
+
+        <View className="my-5 p-4 gap-8">
+          <SearchBar
+            placeholder="Search for stocks..."
+            value={searchQuery}
+            onChangeText={(text: string) => setSearchQuery(text)}
+          />
+
+          {!stocksLoading &&
+          !stocksError &&
+          searchQuery.trim() &&
+          (stocks?.length ?? 0) > 0 && (
+            <Text className="text-xl text-white font-bold">
+              Search results for{" "}
+              <Text className="text-accent">{searchQuery}</Text>
+            </Text>
+          )}
+        
+      </View>
+      
+
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
+      >
+        <FlatList
         data={stocks}
         keyExtractor={(item) => item.ticker}
         renderItem={({ item }) =>
@@ -76,17 +105,7 @@ export const Search = () => {
         }}
         ListHeaderComponent={
           <>
-            <View className="w-full flex-row justify-center mt-20 items-center">
-              <Image source={icons.logo} className="max-w-20 max-h-20" />
-            </View>
-
-            <View className="my-5">
-              <SearchBar
-                placeholder="Search for stocks..."
-                value={searchQuery}
-                onChangeText={(text: string) => setSearchQuery(text)}
-              />
-            </View>
+            
 
             {stocksLoading && (
               <ActivityIndicator
@@ -102,15 +121,7 @@ export const Search = () => {
               </Text>
             )}
 
-            {!stocksLoading &&
-              !stocksError &&
-              searchQuery.trim() &&
-              (stocks?.length ?? 0) > 0 && (
-                <Text className="text-xl text-white font-bold">
-                  Search results for{" "}
-                  <Text className="text-accent">{searchQuery}</Text>
-                </Text>
-              )}
+            
           </>
         }
         ListEmptyComponent={
@@ -125,6 +136,10 @@ export const Search = () => {
           ) : null
         }
       />
+
+
+      </ScrollView>
+      
     </View>
   );
 };

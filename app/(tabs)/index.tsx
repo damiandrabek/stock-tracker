@@ -81,7 +81,7 @@ export default function HomeScreen() {
 
             {trendingStocks && (
               <View className="mt-10">
-                <Text className="text-lg text-white font-bold mb-3">Trending Stocks</Text>
+                <Text className="text-2xl text-white font-bold mb-3">Trending Stocks</Text>
 
                 <FlatList
                   horizontal
@@ -100,7 +100,7 @@ export default function HomeScreen() {
             )}
 
             <View>
-              <Text className="text-lg text-white font-bold mt-5 mb-3">
+              <Text className="text-2xl text-white font-bold mt-5 mb-3">
                 Your Watchlist
               </Text>
 

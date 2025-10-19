@@ -26,7 +26,7 @@ export const updateSearchCount = async (query: string, stock: Stock) => {
       await databases.updateDocument(
         DATABASE_ID, 
         TABLE_ID, 
-        existingStock.$id, 
+        existingStock.stock_id, 
         {
           count: existingStock.count + 1
         }
