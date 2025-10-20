@@ -50,7 +50,7 @@ export const updateSearchCount = async (query: string, stock: Stock) => {
 export const getTrendingStocks = async (): Promise<TrendingStock[] | undefined> => {
   try {
     const result = await databases.listDocuments(DATABASE_ID, TABLE_ID, [
-      Query.limit(5),
+      Query.limit(10),
       Query.orderDesc('count')
     ])
 

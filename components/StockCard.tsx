@@ -1,25 +1,12 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 
 const StockCard = ({
   ticker,
   name,
   logo,
-  ipo,
-  country,
-  currency,
-  exchange,
-  marketCapitalization,
-  weburl,
-  finnhubIndustry,
   currentPrice,
-  change,
-  percentChange,
-  highPriceOfTheDay,
-  lowPriceOfTheDay,
-  openPriceOfTheDay,
-  previousClosePrice,
 }: Stock) => {
   return (
     <Link href={`/stocks/${ticker}`} asChild>
