@@ -16,6 +16,7 @@ interface Stock {
   lowPriceOfTheDay: number;
   openPriceOfTheDay: number;
   previousClosePrice: number;
+  shareOutstanding: number;
 }
 
 interface TrendingStock {

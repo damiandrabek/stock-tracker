@@ -5,6 +5,27 @@ import { useLocalSearchParams } from 'expo-router'
 import { fetchStockDetails } from "@/services/api";
 import useFetch from "@/services/useFetch";
 
+interface StockInfoProps {
+  label: string;
+  value: string | number | null | undefined;
+  numLines?: number;
+  isURL?: boolean;
+}
+
+const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => (
+  <View className="flex-col items-start justify-center mt-5 px-1">
+    <Text className="text-light-200 font-normal text-sm">{label}</Text>
+    <Text
+      className="text-light-100 font-bold text-sm mt-2"
+      numberOfLines={numLines || 2}
+    >
+      {isURL 
+      ? value?.toString().replace(/(^\w+:|^)\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "")
+      : value || "N/A"}
+    </Text>
+  </View>
+);
+
 const StockDetails = () => {
 
   const { id } = useLocalSearchParams();
@@ -18,99 +39,120 @@ const StockDetails = () => {
 
 
   return (
-    <View className="bg-primary flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {stockLoading ? (
-          <ActivityIndicator
-            size="large"
-            color="#0000ff"
-            className="mt-10 self-center"
-          />
-        ) : stockError ? (
-          <Text>Error: {stockError ? stockError.message : ""}</Text>
-        ) : (
-          <View className="w-full">
-            <Image
-              source={{
-                uri: stock?.logo
-                  ? stock?.logo
-                  : "https://placehold.co/302x302/1a1a1a/ffffff?text=Not+Found",
-              }}
-              className=" mx-16 mt-4 h-auto aspect-[1/1] rounded-3xl"
-              resizeMode="stretch"
+    <>
+      <View className="bg-primary flex-1">
+        <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+          {stockLoading ? (
+            <ActivityIndicator
+              size="large"
+              color="#0000ff"
+              className="mt-10 self-center"
             />
+          ) : stockError ? (
+            <Text>Error: {stockError ? stockError.message : ""}</Text>
+          ) : (
+            <View className="w-full px-8">
+              <View className="grid grid-cols-2 gap-y-1 mt-5 gap-x-1">
+                <View className="flex-col">
+                  <View className="flex-col gap-1 mt-5 items-baseline">
+                    <Text className="text-white font-bold text-4xl">
+                      {stock?.ticker}
+                    </Text>
 
-            <View className="grid grid-cols-2 gap-y-3 mt-5">
-              <View className="items-center gap-x-10 mt-2">
-                <Text className="text-white font-bold text-xl">
-                  {stock?.ticker}
-                </Text>
-                <Text className="text-light-100 font-md">{stock?.name}</Text>
+                    <Text className="text-gray-300 font-sm">{stock?.name}</Text>
+                  </View>
+
+                  <View className="flex-row gap-6 mt-2 items-baseline">
+                    <Text className="text-white font-bold text-3xl">
+                      {stock?.currentPrice.toFixed(2)}
+                    </Text>
+
+                    <Text
+                      className={`text-lg font-medium ${
+                        stock?.percentChange >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {stock?.percentChange >= 0 ? "+" : ""}
+                      {stock?.percentChange.toFixed(2)}%
+                    </Text>
+                  </View>
+
+                  <View className="flex-row gap-3 mt-2 items-baseline">
+                    <Text className="text-gray-200 font-normal text-sm">
+                      {stock?.exchange === "NASDAQ NMS - GLOBAL MARKET"
+                        ? "NASDAQ"
+                        : stock?.exchange === "NEW YORK STOCK EXCHANGE, INC."
+                          ? "NYSE"
+                          : stock?.exchange}
+                    </Text>
+
+                    <Text className="text-gray-300 font-sm">
+                      {stock?.currency}
+                    </Text>
+                  </View>
+                </View>
+                <Image
+                  source={{
+                    uri: stock?.logo
+                      ? stock?.logo
+                      : "https://placehold.co/102x102/1a1a1a/ffffff?text=Not+Found",
+                  }}
+                  className=" mx-4 mt-4 h-auto aspect-[1/1] rounded-3xl"
+                  resizeMode="stretch"
+                />
               </View>
 
-              <View className="items-center justify-stretch gap-x-10 mt-2 ">
-                <Text className="text-white font-bold text-xl">
-                  {stock?.currentPrice.toFixed(2)}
-                </Text>
-                <Text className="text-green-400 font-sm">
-                  {stock?.percentChange.toFixed(2)}%
-                </Text>
+              <View className="grid grid-cols-3 gap-1 mt-5">
+                <StockInfo
+                  label="Open"
+                  value={stock?.openPriceOfTheDay.toFixed(2)}
+                />
+                <StockInfo
+                  label="High"
+                  value={stock?.highPriceOfTheDay.toFixed(2)}
+                />
+                <StockInfo
+                  label="Low"
+                  value={stock?.lowPriceOfTheDay.toFixed(2)}
+                />
+                <StockInfo
+                  label="Market Cap"
+                  value={
+                    stock?.marketCapitalization / 1_000_000 >= 1
+                      ? (stock?.marketCapitalization / 1_000_000).toFixed(3) +
+                        " T"
+                      : stock?.marketCapitalization / 1_000 >= 1
+                        ? (stock?.marketCapitalization / 1_000).toFixed(2) +
+                          " B"
+                        : stock?.marketCapitalization + " M"
+                  }
+                />
+                <StockInfo
+                  label="Shares Outstanding"
+                  value={
+                    stock?.shareOutstanding / 1_000 >= 1
+                      ? (stock?.shareOutstanding / 1_000).toFixed(3) + " B"
+                      : stock?.shareOutstanding + " M"
+                  }
+                />
+                <StockInfo label="IPO" value={stock?.ipo.split("-")[0]} />
+
+                <StockInfo label="Country" value={stock?.country} />
+                <StockInfo label="Industry" value={stock?.finnhubIndustry} />
+                <StockInfo
+                  label="Website"
+                  value={stock?.weburl}
+                  numLines={1}
+                  isURL={true}
+                />
               </View>
             </View>
-
-            <View className="grid grid-cols-2 gap-y-3 mt-5">
-              <View className="items-center">
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">Open</Text>
-                  <Text className="text-white">
-                    {stock?.openPriceOfTheDay.toFixed(2)}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">High</Text>
-                  <Text className="text-white">
-                    {stock?.highPriceOfTheDay.toFixed(2)}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">Low</Text>
-                  <Text className="text-white">
-                    {stock?.lowPriceOfTheDay.toFixed(2)}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">IPO</Text>
-                  <Text className="text-white">
-                    {stock?.ipo}
-                  </Text>
-                </View>
-              </View>
-
-              <View className="items-center">
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">Mkt Cap</Text>
-                  <Text className="text-white">
-                    {(stock?.marketCapitalization / 1_000).toFixed(2)} B
-                  </Text>
-                </View>
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">Exchange</Text>
-                  <Text className="text-white">
-                    {stock?.exchange}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between w-full px-10">
-                  <Text className="text-white">Industry</Text>
-                  <Text className="text-white">
-                    {stock?.finnhubIndustry}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-      </ScrollView>
-    </View>
+          )}
+        </ScrollView>
+      </View>
+    </>
   );
 };
 

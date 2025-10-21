@@ -63,7 +63,6 @@ const StockScreen = () => {
   return (
     <SafeAreaView style={themedStyles.safeArea}>
       <ScrollView contentContainerStyle={themedStyles.container}>
-        <ThemedText style={themedStyles.heading}>📈 Stock Tracker</ThemedText>
 
         <ThemedText style={themedStyles.label}>Select Symbol:</ThemedText>
         <View style={themedStyles.pickerCard}>
@@ -139,7 +138,6 @@ const StockScreen = () => {
                       stroke: isDark ? "#393e46" : "#e9ecef",
                     },
                   }}
-                  // bezier
                   style={themedStyles.chart}
                 />
               </View>
