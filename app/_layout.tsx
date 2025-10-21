@@ -25,7 +25,7 @@ export default function RootLayout() {
 
         <Stack.Screen
           name="stock/[id]"
-          options={{ headerShown: true, title: "Stock Details" }}
+          options={{ headerShown: false, title: "Stock Details" }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>
