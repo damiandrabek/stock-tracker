@@ -1,8 +1,8 @@
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useLocalSearchParams } from 'expo-router'
 
-import { fetchStockDetails } from "@/services/api";
+import { fetchStockDetails, fetchStockTimeSeries } from "@/services/api";
 import useFetch from "@/services/useFetch";
 
 interface StockInfoProps {
@@ -28,14 +28,23 @@ const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => (
 
 const StockDetails = () => {
 
+  
   const { id } = useLocalSearchParams();
 
-  const fetchFn = useCallback(() => fetchStockDetails(id as string), []);
+  const fetchFnDetails = useCallback(() => fetchStockDetails(id as string), []);
   const {
     data: stock,
     loading: stockLoading,
     error: stockError,
-  } = useFetch<Stock>(fetchFn, true);
+  } = useFetch<Stock>(fetchFnDetails, true);
+
+  // const [timeInterval, setTimeInterval] = useState<string>('5min');
+  // const fetchFn2 = useCallback(() => fetchStockTimeSeries(id as string, timeInterval as string), []);
+  // const {
+  //   data: stockTimeSeries,
+  //   loading: stockTimeSeriesLoading,
+  //   error: stockTimeSeriesError,
+  // } = useFetch<StockTimeSeries>(fetchFn2, true);
 
 
   return (
@@ -89,7 +98,7 @@ const StockDetails = () => {
                     </Text>
 
                     <Text className="text-gray-300 font-sm">
-                      {stock?.currency}
+                      {"|" + "    " + stock?.currency}
                     </Text>
                   </View>
                 </View>
@@ -103,6 +112,8 @@ const StockDetails = () => {
                   resizeMode="stretch"
                 />
               </View>
+
+              <View className="rounded-xl p-4 shadow-xl shadow-black self-ce "></View>
 
               <View className="grid grid-cols-3 gap-1 mt-5">
                 <StockInfo
@@ -144,10 +155,12 @@ const StockDetails = () => {
                 <StockInfo
                   label="Website"
                   value={stock?.weburl}
-                  numLines={1}
+                  numLines={2}
                   isURL={true}
                 />
               </View>
+
+              {/* <View>{stockTimeSeries}</View> */}
             </View>
           )}
         </ScrollView>

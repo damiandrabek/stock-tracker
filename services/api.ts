@@ -33,32 +33,6 @@ export const FINNHUB_CONFIG = {
   },
 };
 
-// export const fetchStocks = async ({ query }: { query: string }) => {
-
-//   const endpoint = query
-//     // ? `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=GLOBAL_QUOTE&symbol=${encodeURIComponent(query)}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`
-//     ? `${FINNHUB_CONFIG.BASE_URL}/quote?symbol=${encodeURIComponent(query)}&token=${FINNHUB_CONFIG.API_KEY}`
-
-//     : `${FINNHUB_CONFIG.BASE_URL}/stock/profile2?symbol=${randomTicker}&token=${FINNHUB_CONFIG.API_KEY}`
-//     // : `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=TOP_GAINERS_LOSERS&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`
-//     // : `${FINNHUB_CONFIG.BASE_URL}/stock/symbol?exchange=US&token=${FINNHUB_CONFIG.API_KEY}`;
-
-//   const response = await fetch(endpoint, {
-//     method: 'GET',
-//     headers: FINNHUB_CONFIG.headers,
-//   })
-
-//   if(!response.ok) {
-//     // @ts-ignore
-//     throw new Error('Failed to fetch stocks', response.statusText);
-//   }
-
-//   const data = await response.json();
-//   console.log('Fetched stock data:', data);
-//   return data
-
-// }
-
 export const fetchStocksOnWatchlist = async () => {
   const promises = tickerWatchlist.map(async (ticker) => {
     // Fetch profile
@@ -185,7 +159,6 @@ export const fetchStocksForLookUp = async ({ query }: { query: string }) => {
 };
 
 export const fetchStockDetails = async (stockId: string): Promise<Stock> => {
-  
   // Fetch profile
   const profileEndpoint = `${FINNHUB_CONFIG.BASE_URL}/stock/profile2?symbol=${encodeURIComponent(stockId)}&token=${FINNHUB_CONFIG.API_KEY}`;
   const profileRes = await fetch(profileEndpoint, {
@@ -216,7 +189,22 @@ export const fetchStockDetails = async (stockId: string): Promise<Stock> => {
     openPriceOfTheDay: quote.o,
     previousClosePrice: quote.pc,
   };
-  
+
   console.log("Fetched stock data:", data);
   return data;
-}
+};
+
+export const fetchStockTimeSeries = async (stockId: string, interval: string): Promise<StockTimeSeries> => {
+
+  const timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(stockId)}&interval=${encodeURIComponent(interval)}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
+  const timeSeriesRes = await fetch(timeSeriesEndpoint, {
+    method: "GET",
+    headers: ALPHA_VANTAGE_CONFIG.headers,
+  });
+  if (!timeSeriesRes.ok)
+    throw new Error(`Failed to fetch profile for: ${stockId}`);
+  const data = await timeSeriesRes.json();
+
+  console.log("Fetched stock data:", data);
+  return data;
+};

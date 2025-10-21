@@ -28,7 +28,7 @@ const StockScreen = () => {
   const themedStyles = styles(isDark);
 
   const [symbol, setSymbol] = useState<string>("AAPL");
-  const [interval, setInterval] = useState<string>("5min");
+  const [interval, setInterval] = useState<string>("60min");
   const [labels, setLabels] = useState<string[]>([]);
   const [prices, setPrices] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +57,6 @@ const StockScreen = () => {
 
   useEffect(() => {
     loadStockData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [symbol, interval]);
 
   return (
