@@ -106,14 +106,14 @@ const StockDetails = () => {
                   </View>
                 </View>
 
-                <View className="w-28 items-center justify-start">
+                <View className="w-32 h-auto items-center justify-start">
                   <Image
                     source={{
                       uri: stock?.logo
                         ? stock?.logo
                         : "https://placehold.co/102x102/1a1a1a/ffffff?text=Not+Found",
                     }}
-                    style={{ width: 102, height: 102, borderRadius: 24 }}
+                    style={{ width: 144, height: 144, borderRadius: 24 }}
                     resizeMode="cover"
                   />
                 </View>
