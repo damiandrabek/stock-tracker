@@ -114,7 +114,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="StockScreen"
         options={{
-          title: "Stocks",
+          title: "Stox",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <>

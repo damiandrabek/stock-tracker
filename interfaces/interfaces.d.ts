@@ -44,11 +44,10 @@ interface TimeSeriesData {
 
 interface StockTimeSeries {
   'Meta Data'?: Record<string, string>;
-  'Time Series (1min)'?: TimeSeriesData;
-  'Time Series (5min)'?: TimeSeriesData;
-  'Time Series (15min)'?: TimeSeriesData;
-  'Time Series (30min)'?: TimeSeriesData;
   'Time Series (60min)'?: TimeSeriesData;
+  'Time Series (Daily)'?: TimeSeriesData;
+  "Weekly Time Series"?: TimeSeriesData;
+  "Monthly Time Series"?: TimeSeriesData;
   Note?: string;
   Information?: string;
   ErrorMessage?: string;

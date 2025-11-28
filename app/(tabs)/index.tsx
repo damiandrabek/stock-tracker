@@ -4,13 +4,14 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 
-import { fetchStocksOnWatchlist } from "@/services/api";
+import { fetchStocksOnWatchlist, fetchStockTimeSeries } from "@/services/api";
 import useFetch from "@/services/useFetch";
 
 import { icons } from "@/constants/icons";
@@ -19,8 +20,8 @@ import { images } from "@/constants/images";
 import SearchBar from "@/components/SearchBar";
 import StockCard from "@/components/StockCard";
 
-import { getTrendingStocks } from "@/services/appwrite";
 import TrendingCard from "@/components/TrendingCard";
+import { getTrendingStocks } from "@/services/appwrite";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -73,11 +74,12 @@ export default function HomeScreen() {
           <View className="flex-1 mt-5">
             <SearchBar
               placeholder="Search for stocks..."
-              onPress={() => router.push("/search")}
+              onPress={() => router.push("/Search")}
             />
 
             {trendingStocks && (
               <View className="mt-10">
+                
                 <Text className="text-2xl text-white font-bold mb-3">Trending Stocks</Text>
 
                 <FlatList

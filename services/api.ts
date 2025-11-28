@@ -194,17 +194,74 @@ export const fetchStockDetails = async (stockId: string): Promise<Stock> => {
   return data;
 };
 
-export const fetchStockTimeSeries = async (stockId: string, interval: string): Promise<StockTimeSeries> => {
+export type TimeRange =
+  | "1D"
+  | "1W"
+  | "1M"
+  | "3M"
+  | "6M"
+  | "YTD"
+  | "1Y"
+  | "3Y"
+  | "5Y"
+  | "ALL";
 
-  const timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=TIME_SERIES_INTRADAY&symbol=${encodeURIComponent(stockId)}&interval=${encodeURIComponent(interval)}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
+export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): Promise<any> => {
+  let timeSeriesFunc: string;
+  let interval = "60min";
+
+  switch (range) {
+    case "1D":
+      timeSeriesFunc = "TIME_SERIES_INTRADAY";
+      interval = "60min";
+      break;
+    case "1W":
+      timeSeriesFunc = "TIME_SERIES_DAILY";
+      break;
+    case "1M":
+      timeSeriesFunc = "TIME_SERIES_DAILY";
+      break;
+    case "3M":
+      timeSeriesFunc = "TIME_SERIES_DAILY";
+      break;
+    case "6M":
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      break;
+    case "YTD":
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      break;
+    case "1Y":
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      break;
+    case "3Y":
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      break;
+    case "5Y":
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      break;
+    case "ALL":
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      break;
+    default:
+      timeSeriesFunc = "TIME_SERIES_DAILY";
+  }
+
+  let timeSeriesEndpoint: string;
+  if (timeSeriesFunc === "TIME_SERIES_INTRADAY") {
+    timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=${timeSeriesFunc}&symbol=${encodeURIComponent(stockId)}&interval=${interval}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
+  } else {
+    timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=${timeSeriesFunc}&symbol=${encodeURIComponent(stockId)}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
+  }
+
   const timeSeriesRes = await fetch(timeSeriesEndpoint, {
     method: "GET",
     headers: ALPHA_VANTAGE_CONFIG.headers,
   });
   if (!timeSeriesRes.ok)
-    throw new Error(`Failed to fetch profile for: ${stockId}`);
+    throw new Error(`Failed to fetch time series data for: ${stockId}`);
   const data = await timeSeriesRes.json();
 
   console.log("Fetched stock data:", data);
   return data;
 };
+
