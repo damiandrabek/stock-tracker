@@ -111,18 +111,7 @@ export default function TabLayout() {
         }}
       />
 
-      <Tabs.Screen
-        name="StockScreen"
-        options={{
-          title: "Stox",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <>
-              <TabIcon focused={focused} icon={icons.home} title="Stocks" />
-            </>
-          ),
-        }}
-      />
+      
     </Tabs>
 
     // </AuthProvider>

@@ -21,7 +21,7 @@ interface Stock {
 
 interface TrendingStock {
   searchTerm: string;
-  stock_id: number;
+  stock_id: string;
   name: string;
   count: number;
   logo: string;

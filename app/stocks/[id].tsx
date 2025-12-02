@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -17,8 +17,12 @@ interface StockInfoProps {
 }
 
 const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => {
-  // Use a fixed column width so rows align. minWidth prevents excessive wrapping on narrow screens.
-  const containerStyle = { flexBasis: '33.3333%', minWidth: 110, justifyContent: 'center' } as const;
+  // Keep every item in a fixed 3-column grid on iOS.
+  const containerStyle = {
+    width: '33.3333%',
+    maxWidth: '33.3333%',
+    flexGrow: 1,
+  } as const;
 
   const openUrl = async (raw?: string | number | null | undefined) => {
     if (!raw) return;
@@ -32,25 +36,41 @@ const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => {
     }
   };
 
-  return (
-    <View style={containerStyle} className="flex-col items-start justify-center mt-5 px-1">
+  const displayValue =
+    typeof value === 'string'
+      ? value.replace(/(^\w+:|^)\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')
+      : value;
+
+  const content = (
+    <View style={containerStyle} className="flex-col items-start justify-center mt-5 px-2">
       <Text className="text-light-200 font-normal text-sm" numberOfLines={1}>
         {label}
       </Text>
 
-      {isURL && value ? (
-        <TouchableOpacity onPress={() => openUrl(value)} activeOpacity={0.7} accessibilityRole="link" className="mt-2">
-          <Text className="text-accent font-bold text-sm underline" numberOfLines={1} ellipsizeMode="tail">
-            {value.toString().replace(/(^\w+:|^)\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')}
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <Text className="text-light-100 font-bold text-sm mt-2" numberOfLines={numLines || 2}>
-          {value || 'N/A'}
-        </Text>
-      )}
+      <Text
+        className={isURL ? "text-accent font-bold text-sm mt-2 underline" : "text-light-100 font-bold text-sm mt-2"}
+        numberOfLines={isURL ? 1 : numLines || 2}
+        ellipsizeMode="tail"
+      >
+        {displayValue || 'N/A'}
+      </Text>
     </View>
   );
+
+  if (isURL && value) {
+    return (
+      <TouchableOpacity
+        onPress={() => openUrl(value)}
+        activeOpacity={0.75}
+        accessibilityRole="link"
+        hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return content;
 };
 
 const StockDetails = () => {
@@ -83,7 +103,7 @@ const StockDetails = () => {
   const intervalPointsMap: Record<string, number> = {
     '1D': 24,
     '1W': 7,
-    '1M': 30,
+    '1M': 12,
     '3M': 90,
     '6M': 120,
     'YTD': 180,
@@ -112,9 +132,11 @@ const StockDetails = () => {
           ) : (
             <View className="w-full px-6">
 
-              <View className="flex-row items-start justify-between mt-5 gap-x-2">
-                <View className="flex-1 pr-3">
-                  <View className="flex-col gap-1 mt-5 items-baseline">
+              <View className="flex-row items-start justify-between mt-12 gap-2 m-x-6">
+
+                <View className="flex-col gap-y-[0.5] pr-3">
+
+                  <View className="flex-col gap-1 items-baseline">
                     <Text className="text-white font-bold text-4xl">
                       {stock?.ticker}
                     </Text>
@@ -154,7 +176,7 @@ const StockDetails = () => {
                   </View>
                 </View>
 
-                <View className="w-32 h-auto items-center justify-start">
+                <View className="w-32 h-auto items-center mr-4">
                   <Image
                     source={{
                       uri: stock?.logo
@@ -217,10 +239,9 @@ const StockDetails = () => {
                 </>
               ) : null}
 
-              <View className="rounded-xl p-4 shadow-xl shadow-black self-center"></View>
+          
 
-              {/* three-column stats -> convert grid to flex-wrap */}
-              <View className="flex-row flex-wrap mt-2 -mx-1">
+              <View className="flex-row flex-wrap -mx-1">
                 <StockInfo
                   label="Open"
                   value={stock?.openPriceOfTheDay?.toFixed(2)}
@@ -261,23 +282,12 @@ const StockDetails = () => {
 
                 <StockInfo label="Country" value={stock?.country} />
                 <StockInfo label="Industry" value={stock?.finnhubIndustry} />
-                {stock?.weburl ? (
-                  <Link href={stock.weburl}>
-                    <StockInfo
-                      label="Website"
-                      value={stock.weburl}
-                      numLines={2}
-                      isURL={true}
-                    />
-                  </Link>
-                ) : (
-                  <StockInfo
-                    label="Website"
-                    value="N/A"
-                    numLines={2}
-                    isURL={true}
-                  />
-                )}
+                <StockInfo
+                  label="Website"
+                  value={stock?.weburl || 'N/A'}
+                  numLines={1}
+                  isURL={!!stock?.weburl}
+                />
                 
               </View>
             </View>
