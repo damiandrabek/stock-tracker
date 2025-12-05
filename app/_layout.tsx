@@ -23,7 +23,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
         <Stack.Screen
-          name="stocks/[id]"
+          name="stocks"
           options={{ headerShown: false }}
         />
         <Stack.Screen name="+not-found" />

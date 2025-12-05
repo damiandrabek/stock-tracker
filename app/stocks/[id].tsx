@@ -12,17 +12,10 @@ import { icons } from "@/constants/icons";
 interface StockInfoProps {
   label: string;
   value: string | number | null | undefined;
-  numLines?: number;
   isURL?: boolean;
 }
 
-const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => {
-  // Keep every item in a fixed 3-column grid on iOS.
-  const containerStyle = {
-    width: '33.3333%',
-    maxWidth: '33.3333%',
-    flexGrow: 1,
-  } as const;
+const StockInfo = ({ label, value, isURL }: StockInfoProps) => {
 
   const openUrl = async (raw?: string | number | null | undefined) => {
     if (!raw) return;
@@ -36,23 +29,31 @@ const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => {
     }
   };
 
-  const displayValue =
-    typeof value === 'string'
-      ? value.replace(/(^\w+:|^)\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')
-      : value;
+  const displayValue = (() => {
+    if (typeof value !== 'string') return value;
+    return value
+      .replace(/(^\w+:|^)\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\/.*$/, '');
+
+  })();
 
   const content = (
-    <View style={containerStyle} className="flex-col items-start justify-center mt-5 px-2">
+    <View className="w-full flex-col items-start justify-center px-2 mt-4">
       <Text className="text-light-200 font-normal text-sm" numberOfLines={1}>
         {label}
       </Text>
 
       <Text
-        className={isURL ? "text-accent font-bold text-sm mt-2 underline" : "text-light-100 font-bold text-sm mt-2"}
-        numberOfLines={isURL ? 1 : numLines || 2}
+        className={`font-bold text-sm mt-2 ${isURL
+            ? "text-accent  underline"
+            : "text-light-100"}
+          
+        `}
+        numberOfLines={1}
         ellipsizeMode="tail"
       >
-        {displayValue || 'N/A'}
+        {displayValue || "N/A"}
       </Text>
     </View>
   );
@@ -64,17 +65,19 @@ const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => {
         activeOpacity={0.75}
         accessibilityRole="link"
         hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+        className="w-1/3"
       >
         {content}
       </TouchableOpacity>
     );
   }
 
-  return content;
+  return <View className="w-1/3">{content}</View>;
 };
 
 const StockDetails = () => {
   const [selectedInterval, setSelectedInterval] = useState<TimeRange>("1M");
+  const TIME_RANGES: TimeRange[] = ["1D", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"];
   
   const { id } = useLocalSearchParams();
 
@@ -95,14 +98,13 @@ const StockDetails = () => {
     error: stockTimeSeriesError,
   } = useFetch(fetchFnTimeSeries, true);
 
-  // const chartData removed — use formattedChartData below which adapts to selected interval
+  // chartData removed - use formattedChartData below which adapts to selected interval
   const rawData = stockTimeSeries ? getRawChartData(stockTimeSeries) : [];
   const lastDataPoint = rawData.length > 0 ? rawData[rawData.length - 1] : null;
 
   // map selected interval to how many data points to show on the chart
   const intervalPointsMap: Record<TimeRange, number> = {
     '1D': 24,
-    '1W': 7,
     '1M': 30,
     '3M': 90,
     '6M': 26,
@@ -119,7 +121,7 @@ const StockDetails = () => {
   return (
     <>
       <View className="bg-primary flex-1">
-        <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
           {stockLoading ? (
             <ActivityIndicator
               size="large"
@@ -131,7 +133,7 @@ const StockDetails = () => {
           ) : (
             <View className="w-full px-5">
 
-              <View className="flex-row items-start justify-between mt-12 gap-2 m-x-6">
+              <View className="flex-row items-start justify-between mt-8 gap-2 m-x-6">
 
                 <View className="flex-col gap-y-[0.5]">
 
@@ -174,37 +176,36 @@ const StockDetails = () => {
                     </Text>
 
                     <Text className="text-gray-300 font-sm">
-                      {"•" + "    " + stock?.currency}
+                      {"\u2022    " + stock?.currency}
                     </Text>
                   </View>
                 </View>
 
-                <View className="w-32 h-auto items-center mr-4">
+                <View className="items-center mr-4">
                   <Image
                     source={{
                       uri: stock?.logo
                         ? stock?.logo
                         : "https://placehold.co/102x102/1a1a1a/ffffff?text=Not+Found",
                     }}
-                    style={{ width: 144, height: 144, borderRadius: 24 }}
+                    style={{ width: 160, height: 160, borderRadius: 24 }}
                     resizeMode="cover"
                   />
                 </View>
               </View>
 
               {/* Time Interval Selector */}
-              <View className="">
-                <Text className="text-white font-bold text-lg mb-3">Time Range</Text>
-                <View className="flex-row flex-wrap gap-2">
-                  {["1D", "1W", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"].map((interval) => (
+                <View className="my-2 flex-row flex-wrap gap-2">
+                  {TIME_RANGES.map((interval) => (
                     <TouchableOpacity
                       key={interval}
                       onPress={() => setSelectedInterval(interval as TimeRange)}
-                      className={`px-3 py-2 rounded-lg ${
+                      className={`px-3 py-2 rounded-2xl ${
                         selectedInterval === interval
                           ? "bg-accent"
                           : "bg-gray-700"
-                      }`}
+                      } ${stockTimeSeriesLoading && selectedInterval === interval ? "opacity-60" : ""}`}
+                      disabled={stockTimeSeriesLoading && selectedInterval === interval}
                     >
                       <Text
                         className={`text-xs font-semibold ${
@@ -218,7 +219,6 @@ const StockDetails = () => {
                     </TouchableOpacity>
                   ))}
                 </View>
-              </View>
 
               {/* Chart Section */}
               {stockTimeSeriesLoading ? (
@@ -244,7 +244,7 @@ const StockDetails = () => {
 
           
 
-              <View className="flex-row flex-wrap -mx-1">
+              <View className="flex-row flex-wrap -mx-1 ">
                 <StockInfo
                   label="Open"
                   value={stock?.openPriceOfTheDay?.toFixed(2)}
@@ -272,7 +272,7 @@ const StockDetails = () => {
                   }
                 />
                 <StockInfo
-                  label="Shares Outstanding"
+                  label="Number of Shares"
                   value={
                     stock?.shareOutstanding
                       ? stock?.shareOutstanding / 1_000 >= 1
@@ -288,7 +288,6 @@ const StockDetails = () => {
                 <StockInfo
                   label="Website"
                   value={stock?.weburl || 'N/A'}
-                  numLines={1}
                   isURL={!!stock?.weburl}
                 />
                 

@@ -8,11 +8,29 @@ const tickerWatchlist = [
   "TSLA",
   "NVDA",
   "META",
-  "BRK.B",
+  "BA",
   "JPM",
   "V",
-  "ASML",
+  "CRM",
   "AVGO",
+  // "GE",
+  // "DIS",
+  // "NFLX",
+  // "PYPL",
+  // "INTC",
+  // "CSCO",
+  // "ADBE",
+  // "ORCL",
+  // "IBM",
+  // "QCOM",
+  // "TXN",
+  // "AMD",
+  // "NOW",
+  // "UBER",
+  // "BLK",
+  // "BX",
+  // "NKE",
+  // "SBUX",
 ];
 const randomTicker =
   tickerWatchlist[Math.floor(Math.random() * tickerWatchlist.length)];
@@ -196,7 +214,6 @@ export const fetchStockDetails = async (stockId: string): Promise<Stock> => {
 
 export type TimeRange =
   | "1D"
-  | "1W"
   | "1M"
   | "3M"
   | "6M"
@@ -215,9 +232,6 @@ export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): P
       timeSeriesFunc = "TIME_SERIES_INTRADAY";
       interval = "60min";
       break;
-    case "1W":
-      timeSeriesFunc = "TIME_SERIES_DAILY";
-      break;
     case "1M":
       timeSeriesFunc = "TIME_SERIES_DAILY";
       break;
@@ -228,7 +242,7 @@ export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): P
       timeSeriesFunc = "TIME_SERIES_WEEKLY";
       break;
     case "YTD":
-      timeSeriesFunc = "TIME_SERIES_DAILY";
+      timeSeriesFunc = "TIME_SERIES_WEEKLY";
       break;
     case "1Y":
       timeSeriesFunc = "TIME_SERIES_WEEKLY";

@@ -11,18 +11,15 @@ interface StockChartProps {
 }
 
 export const StockChart: React.FC<StockChartProps> = ({
-  data,
-  ticker,
-  currentPrice,
-  percentChange,
+  data
 }) => {
   const screenWidth = Dimensions.get("window").width;
-  const chartHeight = 224;
+  const chartHeight = 280;
   const maxXAxisLabels = 6;
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
-  const horizontalPadding = 0; // matches parent px-6 (24 * 2)
-  const fallbackWidth = screenWidth - horizontalPadding;
-  const chartWidth = (containerWidth ?? fallbackWidth); // account for p-2 on wrapper
+  const parentHorizontalPadding = 40; // matches px-5 (20) on each side of parent
+  const fallbackWidth = screenWidth - parentHorizontalPadding;
+  const chartWidth = containerWidth ?? fallbackWidth;
 
   const condensedLabels =
     data.labels && data.labels.length > 0
@@ -46,57 +43,54 @@ export const StockChart: React.FC<StockChartProps> = ({
       className="rounded-lg bg-primary my-4 overflow-hidden w-full"
       onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
     >
-      
-
       <LineChart
-        data={{
-          labels: condensedLabels,
-          datasets: data.datasets,
-        }}
-        width={chartWidth}
-        height={chartHeight}
-        yAxisLabel=""
-        yAxisSuffix=""
-        chartConfig={{
-          backgroundGradientFrom: "#1a1a1a",
-          backgroundGradientTo: "#1a1a1a",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(171, 139, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(148, 163, 184, ${opacity})`,
-          style: {
-            borderRadius: 12,
-          },
-          propsForDots: {
-            r: "0",
-            strokeWidth: "0",
-            stroke: "transparent",
-          },
-          propsForBackgroundLines: {
-            strokeDasharray: "0",
-            stroke: "rgba(148, 163, 184, 0.15)",
-          },
-          fillShadowGradientFrom: "rgba(171, 139, 255, 0.75)",
-          fillShadowGradientTo: "rgba(171, 139, 255, 0.1)",
-          fillShadowGradientFromOpacity: 0.75,
-          fillShadowGradientToOpacity: 0.1,
-        }}
-        
-        style={{
-          marginVertical: 0,
-          borderRadius: 12,
-        }}
-        withVerticalLabels={true}
-        withHorizontalLabels={true}
-        withOuterLines={false}
-        withShadow={true}
-        withDots={false}
-        withHorizontalLines={false}
-        withVerticalLines={false}
-        bezier={false}
-        segments={3}
-        fromZero={false}
+      data={{
+        labels: condensedLabels,
+        datasets: data.datasets,
+      }}
+      width={chartWidth}
+      height={chartHeight}
+      yAxisLabel=""
+      yAxisSuffix=""
+      chartConfig={{
+        backgroundGradientFrom: "#1a1a1a",
+        backgroundGradientTo: "#1a1a1a",
+        decimalPlaces: 0,
+        color: (opacity = 1) => `rgba(171, 139, 255, ${opacity})`,
+        labelColor: (opacity = 1) => `rgba(148, 163, 184, ${opacity})`,
+        style: {
+        borderRadius: 12,
+        },
+        propsForDots: {
+        r: "0",
+        strokeWidth: "0",
+        stroke: "transparent",
+        },
+        propsForBackgroundLines: {
+        strokeDasharray: "1",
+        stroke: "rgba(148, 163, 184, 0.15)",
+        },
+        fillShadowGradientFrom: "#8A4FFF",
+        fillShadowGradientTo: "rgba(123, 97, 255, 0.01)",
+        fillShadowGradientFromOpacity: 0.75,
+        fillShadowGradientToOpacity: 0.1,
+      }}
+      style={{
+        marginVertical: 0,
+        paddingRight: 30,
+        borderRadius: 12,
+      }}
+      withVerticalLabels={true}
+      withHorizontalLabels={true}
+      withOuterLines={false}
+      withShadow={true}
+      withDots={false}
+      withHorizontalLines={true}
+      withVerticalLines={true}
+      bezier={false}
+      segments={4}
+      fromZero={false}
       />
-
     </View>
   );
 };
