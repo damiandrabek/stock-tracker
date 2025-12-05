@@ -22,12 +22,15 @@ export interface FormattedChartData {
  */
 export const transformTimeSeriesData = (
   apiResponse: any,
-  dataPoints: number = 30
+  dataPoints: number = 30,
+  range?: TimeRange
 ): FormattedChartData => {
   // Extract the time series data (could be Daily, Weekly, Intraday, etc.)
   let timeSeries =
     apiResponse["Time Series (Daily)"] ||
+    apiResponse["Weekly Time Series"] || // Alpha Vantage weekly format
     apiResponse["Time Series (Weekly)"] ||
+    apiResponse["Monthly Time Series"] || // Alpha Vantage monthly format
     apiResponse["Time Series (Monthly)"] ||
     apiResponse["Time Series (1min)"] ||
     apiResponse["Time Series (5min)"] ||
@@ -54,8 +57,18 @@ export const transformTimeSeriesData = (
     }))
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
-  // Take only the last N data points
-  const recentData = entries.slice(-dataPoints);
+  // Filter to year-to-date for YTD range, otherwise take the last N data points
+  let filteredEntries = entries;
+  if (range === "YTD") {
+    const startOfYear = new Date();
+    startOfYear.setMonth(0, 1);
+    startOfYear.setHours(0, 0, 0, 0);
+    filteredEntries = entries.filter(
+      (entry) => new Date(entry.timestamp).getTime() >= startOfYear.getTime()
+    );
+  }
+
+  const recentData = range === "YTD" ? filteredEntries : filteredEntries.slice(-dataPoints);
 
   // Format dates for labels (shortened for display)
   const labels = recentData.map((point) => {
@@ -71,7 +84,7 @@ export const transformTimeSeriesData = (
     datasets: [
       {
         data: closeData,
-        color: (opacity = 1) => `rgba(34, 197, 94, ${opacity})`, // Green
+        color: (opacity = 1) => `rgba(171, 139, 255, ${opacity})`,
         strokeWidth: 2,
       },
     ],
@@ -85,7 +98,9 @@ export const transformTimeSeriesData = (
 export const getRawChartData = (apiResponse: any): ChartDataPoint[] => {
   let timeSeries =
     apiResponse["Time Series (Daily)"] ||
+    apiResponse["Weekly Time Series"] ||
     apiResponse["Time Series (Weekly)"] ||
+    apiResponse["Monthly Time Series"] ||
     apiResponse["Time Series (Monthly)"] ||
     apiResponse["Time Series (1min)"] ||
     apiResponse["Time Series (5min)"] ||
@@ -148,3 +163,4 @@ export const formatVolume = (volume: number): string => {
   }
   return volume.toString();
 };
+import type { TimeRange } from "./api";

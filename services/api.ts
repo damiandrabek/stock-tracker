@@ -202,13 +202,13 @@ export type TimeRange =
   | "6M"
   | "YTD"
   | "1Y"
-  | "3Y"
-  | "5Y"
-  | "ALL";
+  | "2Y"
+  | "5Y";
 
 export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): Promise<any> => {
   let timeSeriesFunc: string;
   let interval = "60min";
+  const isYtd = range === "YTD";
 
   switch (range) {
     case "1D":
@@ -228,18 +228,15 @@ export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): P
       timeSeriesFunc = "TIME_SERIES_WEEKLY";
       break;
     case "YTD":
-      timeSeriesFunc = "TIME_SERIES_WEEKLY";
+      timeSeriesFunc = "TIME_SERIES_DAILY";
       break;
     case "1Y":
       timeSeriesFunc = "TIME_SERIES_WEEKLY";
       break;
-    case "3Y":
+    case "2Y":
       timeSeriesFunc = "TIME_SERIES_WEEKLY";
       break;
     case "5Y":
-      timeSeriesFunc = "TIME_SERIES_WEEKLY";
-      break;
-    case "ALL":
       timeSeriesFunc = "TIME_SERIES_WEEKLY";
       break;
     default:
@@ -247,10 +244,13 @@ export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): P
   }
 
   let timeSeriesEndpoint: string;
+  const outputSizeParam =
+    timeSeriesFunc === "TIME_SERIES_DAILY" && isYtd ? "&outputsize=full" : "";
+
   if (timeSeriesFunc === "TIME_SERIES_INTRADAY") {
     timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=${timeSeriesFunc}&symbol=${encodeURIComponent(stockId)}&interval=${interval}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
   } else {
-    timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=${timeSeriesFunc}&symbol=${encodeURIComponent(stockId)}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
+    timeSeriesEndpoint = `${ALPHA_VANTAGE_CONFIG.BASE_URL}function=${timeSeriesFunc}&symbol=${encodeURIComponent(stockId)}${outputSizeParam}&apikey=${ALPHA_VANTAGE_CONFIG.API_KEY}`;
   }
 
   const timeSeriesRes = await fetch(timeSeriesEndpoint, {
@@ -264,4 +264,3 @@ export const fetchStockTimeSeries = async (stockId: string, range: TimeRange): P
   console.log("Fetched stock data:", data);
   return data;
 };
-

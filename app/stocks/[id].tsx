@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { StockChart } from "@/components/StockChart";
-import { fetchStockDetails, fetchStockTimeSeries } from "@/services/api";
+import { fetchStockDetails, fetchStockTimeSeries, type TimeRange } from "@/services/api";
 import { getRawChartData, transformTimeSeriesData } from "@/services/chartUtils";
 import useFetch from "@/services/useFetch";
 
@@ -74,7 +74,7 @@ const StockInfo = ({ label, value, numLines, isURL }: StockInfoProps) => {
 };
 
 const StockDetails = () => {
-  const [selectedInterval, setSelectedInterval] = useState<"1D" | "1W" | "1M" | "3M" | "6M" | "YTD" | "1Y" | "3Y" | "5Y" | "ALL">("1M");
+  const [selectedInterval, setSelectedInterval] = useState<TimeRange>("1M");
   
   const { id } = useLocalSearchParams();
 
@@ -100,21 +100,20 @@ const StockDetails = () => {
   const lastDataPoint = rawData.length > 0 ? rawData[rawData.length - 1] : null;
 
   // map selected interval to how many data points to show on the chart
-  const intervalPointsMap: Record<string, number> = {
+  const intervalPointsMap: Record<TimeRange, number> = {
     '1D': 24,
     '1W': 7,
-    '1M': 12,
+    '1M': 30,
     '3M': 90,
-    '6M': 120,
-    'YTD': 180,
-    '1Y': 240,
-    '3Y': 360,
-    '5Y': 480,
-    'ALL': 720,
+    '6M': 26,
+    'YTD': 52,
+    '1Y': 52,
+    '2Y': 104,
+    '5Y': 260,
   };
 
   const pointsToShow = intervalPointsMap[selectedInterval] || 30;
-  const formattedChartData = stockTimeSeries ? transformTimeSeriesData(stockTimeSeries, pointsToShow) : null;
+  const formattedChartData = stockTimeSeries ? transformTimeSeriesData(stockTimeSeries, pointsToShow, selectedInterval) : null;
 
 
   return (
@@ -130,11 +129,11 @@ const StockDetails = () => {
           ) : stockError ? (
             <Text>Error: {stockError ? stockError.message : ""}</Text>
           ) : (
-            <View className="w-full px-6">
+            <View className="w-full px-5">
 
               <View className="flex-row items-start justify-between mt-12 gap-2 m-x-6">
 
-                <View className="flex-col gap-y-[0.5] pr-3">
+                <View className="flex-col gap-y-[0.5]">
 
                   <View className="flex-col gap-1 items-baseline">
                     <Text className="text-white font-bold text-4xl">
@@ -190,13 +189,13 @@ const StockDetails = () => {
               </View>
 
               {/* Time Interval Selector */}
-              <View className="mt-6 mb-4">
+              <View className="">
                 <Text className="text-white font-bold text-lg mb-3">Time Range</Text>
                 <View className="flex-row flex-wrap gap-2">
-                  {["1D", "1W", "1M", "3M", "6M", "YTD", "1Y", "3Y", "5Y", "ALL"].map((interval) => (
+                  {["1D", "1W", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"].map((interval) => (
                     <TouchableOpacity
                       key={interval}
-                      onPress={() => setSelectedInterval(interval as any)}
+                      onPress={() => setSelectedInterval(interval as TimeRange)}
                       className={`px-3 py-2 rounded-lg ${
                         selectedInterval === interval
                           ? "bg-accent"

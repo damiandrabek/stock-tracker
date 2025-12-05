@@ -1,5 +1,5 @@
 import { FormattedChartData } from "@/services/chartUtils";
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
@@ -17,7 +17,21 @@ export const StockChart: React.FC<StockChartProps> = ({
   percentChange,
 }) => {
   const screenWidth = Dimensions.get("window").width;
-  const chartHeight = 250;
+  const chartHeight = 224;
+  const maxXAxisLabels = 6;
+  const [containerWidth, setContainerWidth] = useState<number | null>(null);
+  const horizontalPadding = 0; // matches parent px-6 (24 * 2)
+  const fallbackWidth = screenWidth - horizontalPadding;
+  const chartWidth = (containerWidth ?? fallbackWidth); // account for p-2 on wrapper
+
+  const condensedLabels =
+    data.labels && data.labels.length > 0
+      ? data.labels.map((label, idx) => {
+          const interval = Math.max(1, Math.floor(data.labels.length / maxXAxisLabels));
+          const isLast = idx === data.labels.length - 1;
+          return isLast || idx % interval === 0 ? label : "";
+        })
+      : [];
 
   if (!data.labels || data.labels.length === 0) {
     return (
@@ -28,15 +42,18 @@ export const StockChart: React.FC<StockChartProps> = ({
   }
 
   return (
-    <View className="rounded-lg bg-gray-900 p-2 my-4 overflow-hidden">
+    <View
+      className="rounded-lg bg-primary my-4 overflow-hidden w-full"
+      onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
+    >
       
 
       <LineChart
         data={{
-          labels: data.labels,
+          labels: condensedLabels,
           datasets: data.datasets,
         }}
-        width={screenWidth - 64}
+        width={chartWidth}
         height={chartHeight}
         yAxisLabel=""
         yAxisSuffix=""
@@ -44,20 +61,24 @@ export const StockChart: React.FC<StockChartProps> = ({
           backgroundGradientFrom: "#1a1a1a",
           backgroundGradientTo: "#1a1a1a",
           decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(156, 163, 175, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(156, 163, 175, ${opacity})`,
+          color: (opacity = 1) => `rgba(171, 139, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(148, 163, 184, ${opacity})`,
           style: {
             borderRadius: 12,
           },
           propsForDots: {
-            r: "2",
-            strokeWidth: "2",
-            stroke: "#22c55e",
+            r: "0",
+            strokeWidth: "0",
+            stroke: "transparent",
           },
           propsForBackgroundLines: {
-            strokeDasharray: "1",
-            stroke: "rgba(156, 163, 175, 0.2)",
+            strokeDasharray: "0",
+            stroke: "rgba(148, 163, 184, 0.15)",
           },
+          fillShadowGradientFrom: "rgba(171, 139, 255, 0.75)",
+          fillShadowGradientTo: "rgba(171, 139, 255, 0.1)",
+          fillShadowGradientFromOpacity: 0.75,
+          fillShadowGradientToOpacity: 0.1,
         }}
         
         style={{
@@ -68,6 +89,11 @@ export const StockChart: React.FC<StockChartProps> = ({
         withHorizontalLabels={true}
         withOuterLines={false}
         withShadow={true}
+        withDots={false}
+        withHorizontalLines={false}
+        withVerticalLines={false}
+        bezier={false}
+        segments={3}
         fromZero={false}
       />
 
@@ -95,4 +121,3 @@ const StatItem: React.FC<StockChartStatsProps> = ({ label, value, color = "gray"
     </View>
   );
 };
-
