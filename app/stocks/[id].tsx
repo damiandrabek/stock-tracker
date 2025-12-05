@@ -161,16 +161,20 @@ const StockDetails = () => {
                   </View>
 
                   <View className="flex-row gap-3 mt-2 items-baseline">
-                    <Text className="text-gray-200 font-normal text-sm">
+                    <Text className="text-gray-200 font-normal text-base">
                       {stock?.exchange === "NASDAQ NMS - GLOBAL MARKET"
                         ? "NASDAQ"
                         : stock?.exchange === "NEW YORK STOCK EXCHANGE, INC."
-                          ? "NYSE"
-                          : stock?.exchange}
+                        ? "NYSE"
+                        : stock?.exchange === "LONDON STOCK EXCHANGE"
+                        ? "LSE"
+                        : stock?.exchange === "SWISS EXCHANGE"
+                        ? "Swiss"
+                        : stock?.exchange}
                     </Text>
 
                     <Text className="text-gray-300 font-sm">
-                      {"|" + "    " + stock?.currency}
+                      {"•" + "    " + stock?.currency}
                     </Text>
                   </View>
                 </View>
