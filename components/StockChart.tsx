@@ -77,7 +77,7 @@ export const StockChart: React.FC<StockChartProps> = ({
       }}
       style={{
         marginVertical: 0,
-        paddingRight: 30,
+        paddingRight: 35,
         borderRadius: 12,
       }}
       withVerticalLabels={true}

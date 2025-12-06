@@ -23,8 +23,12 @@ import StockCard from "@/components/StockCard";
 import TrendingCard from "@/components/TrendingCard";
 import { getTrendingStocks } from "@/services/appwrite";
 
+import { useAuth } from "@/context/AuthContext";
+
 export default function HomeScreen() {
   const router = useRouter();
+
+  const { user, loading, watchlist, logout, removeFromWatchlist } = useAuth();
 
   const {
     data: trendingStocks,
@@ -39,9 +43,39 @@ export default function HomeScreen() {
     error: stocksError,
   } = useFetch(fetchFn, true);
 
+  
+
   return (
     <View className="flex-1 bg-primary">
       <Image source={images.bg} className="absolute w-full z-0" />
+      {loading ? <Text>Loading...</Text> : ""}
+      {!user ? (
+        <Text className="text-white">Please log in</Text>
+      ) : (
+        <View>
+          <Text className="text-white">Welcome {user.email}</Text>
+          <Pressable onPress={logout}>
+            <Text className="text-white">Log out</Text>
+          </Pressable>
+          <FlatList
+            data={watchlist}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text>{item}</Text>
+                <Pressable onPress={() => removeFromWatchlist(item)}>
+                  <Text>Remove</Text>
+                </Pressable>
+              </View>
+            )}
+          />
+        </View>
+      )}
 
       <ScrollView
         className="flex-1 px-5"
@@ -65,10 +99,10 @@ export default function HomeScreen() {
             {stocksError
               ? stocksError.message
               : typeof trendingStocksError === "string"
-              ? trendingStocksError
-              : trendingStocksError instanceof Error
-              ? trendingStocksError.message
-              : ""}
+                ? trendingStocksError
+                : trendingStocksError instanceof Error
+                  ? trendingStocksError.message
+                  : ""}
           </Text>
         ) : (
           <View className="flex-1 mt-5">
@@ -79,20 +113,19 @@ export default function HomeScreen() {
 
             {trendingStocks && (
               <View className="mt-10">
-                
-                <Text className="text-2xl text-white font-bold mb-3">Trending Stocks</Text>
+                <Text className="text-2xl text-white font-bold mb-3">
+                  Trending Stocks
+                </Text>
 
                 <FlatList
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  ItemSeparatorComponent={() => <View className="w-4"/>}
+                  ItemSeparatorComponent={() => <View className="w-4" />}
                   data={trendingStocks}
                   keyExtractor={(item) => item.stock_id.toString()}
                   className="bb-4 mt-3"
                   renderItem={({ item, index }) => (
-                    <TrendingCard 
-                      stock={item}
-                      index={index}  />
+                    <TrendingCard stock={item} index={index} />
                   )}
                 />
               </View>

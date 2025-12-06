@@ -4,6 +4,7 @@ import 'react-native-reanimated';
 
 import { StatusBar } from "react-native";
 
+import { AuthProvider } from "@/context/AuthContext";
 
 import './globals.css';
 
@@ -18,16 +19,14 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar hidden={true} />
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <AuthProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen
-          name="stocks"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+          <Stack.Screen name="stocks" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </AuthProvider>
     </>
   );
 }

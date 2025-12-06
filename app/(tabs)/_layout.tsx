@@ -7,7 +7,7 @@ import { icons } from "@/constants/icons";
 
 import { View, Text, Image, ImageBackground, Platform, useColorScheme } from 'react-native';
 
-import { AuthProvider } from '@/context/AuthContext';
+
 
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
@@ -99,7 +99,7 @@ export default function TabLayout() {
 
 
       <Tabs.Screen
-        name="Profile"
+        name="SignIn"
         options={{
           title: "Profile",
           headerShown: false,
