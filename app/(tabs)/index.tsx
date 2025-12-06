@@ -55,18 +55,18 @@ export default function HomeScreen() {
       <Image source={images.bg} className="absolute w-full z-0" />
 
       {loading ? <Text>Loading...</Text> : ""}
-      <View className="relative w-fit h-auto p-5 mt-16 rounded-3xl bg-accent">
+      <View className="relative self-center h-auto p-5 mt-16 rounded-3xl bg-accent">
         {!user ? (
           <Text className="text-white">Please Log In</Text>
         ) : (
           <View className="flex-col gap-y-2">
             <View className="flex-row gap-1">
-              <Image source={icons.person}/>
+              <Image source={icons.person} />
               <Text className="text-slate-100 font-bold">{user.email}</Text>
             </View>
 
             <Pressable onPress={logout} className="">
-              <Text className="w-fit p-2 text-white font-semibold bg-red-400 rounded-full">
+              <Text className="self-center p-2 text-white font-semibold bg-red-400 rounded-full">
                 Log Out
               </Text>
             </Pressable>
