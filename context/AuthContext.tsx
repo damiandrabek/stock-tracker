@@ -24,7 +24,7 @@ interface AuthContextProps {
   watchlist: string[];
   signUp: (email: string, password: string) => Promise<UserCredential>;
   signIn: (email: string, password: string) => Promise<UserCredential>;
-  logout: () => Promise<void>;
+  signout: () => Promise<void>;
   addToWatchlist: (symbol: string) => Promise<void>;
   removeFromWatchlist: (symbol: string) => Promise<void>;
 }
@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     signInWithEmailAndPassword(auth, email, password);
 
   // Sign out
-  const logout = () => signOut(auth);
+  const signout = () => signOut(auth);
 
   // Add stock to watchlist
   const addToWatchlist = async (symbol: string) => {
@@ -113,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         watchlist,
         signUp,
         signIn,
-        logout,
+        signout,
         addToWatchlist,
         removeFromWatchlist,
       }}

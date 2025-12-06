@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const { user, loading, watchlist, logout, removeFromWatchlist } = useAuth();
+  const { user, loading, watchlist } = useAuth();
 
   const {
     data: trendingStocks,
@@ -55,40 +55,6 @@ export default function HomeScreen() {
       <Image source={images.bg} className="absolute w-full z-0" />
 
       {loading ? <Text>Loading...</Text> : ""}
-      <View className="relative self-center h-auto p-5 mt-16 rounded-3xl bg-accent">
-        {!user ? (
-          <Text className="text-white">Please Log In</Text>
-        ) : (
-          <View className="flex-col gap-y-2">
-            <View className="flex-row gap-1">
-              <Image source={icons.person} />
-              <Text className="text-slate-100 font-bold">{user.email}</Text>
-            </View>
-
-            <Pressable onPress={logout} className="">
-              <Text className="self-center p-2 text-white font-semibold bg-red-400 rounded-full">
-                Log Out
-              </Text>
-            </Pressable>
-            {/* <FlatList
-              data={watchlist}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text>{item}</Text>
-                  <Pressable onPress={() => removeFromWatchlist(item)}>
-                    <Text>Remove</Text>
-                  </Pressable>
-                </View>
-              )}/> */}
-          </View>
-        )}
-      </View>
 
       <ScrollView
         className="flex-1 px-5 pb-40"
@@ -150,9 +116,15 @@ export default function HomeScreen() {
             )}
 
             <View>
-              <Text className="text-2xl text-white font-bold mt-5 mb-3">
-                Your Watchlist
-              </Text>
+              {user ? (
+                <Text className="text-2xl text-white font-bold mt-5 mb-3">
+                  Your Watchlist
+                </Text>
+              ) : (
+                <Text className="text-2xl text-white font-bold mt-5 mb-3">
+                  Popular Stocks
+                </Text>
+              )}
 
               <FlatList
                 data={stocks}

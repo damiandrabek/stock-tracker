@@ -54,7 +54,7 @@ const StockInfo = ({ label, value, isURL }: StockInfoProps) => {
 
       <Text
         className={`font-bold text-sm mt-2 ${isURL
-            ? "text-accent  underline"
+            ? "text-accent underline"
             : "text-light-100"}
           
         `}

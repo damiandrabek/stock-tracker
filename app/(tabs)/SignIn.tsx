@@ -7,15 +7,21 @@ import {
   StyleSheet,
   useColorScheme,
   ScrollView,
+  Image,
+  FlatList
 } from "react-native";
 import { useAuth } from "@/context/AuthContext";
+
+import { icons } from "@/constants/icons";
+import RemoveButton from "@/components/RemoveButton";
+
 
 export default function LoginScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const themedStyles = styles(isDark);
 
-  const { signUp, signIn, user, logout, watchlist } = useAuth();
+  const { user, loading, watchlist, removeFromWatchlist, signUp, signIn, signout } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,23 +49,46 @@ export default function LoginScreen() {
       <View style={themedStyles.card}>
         {user ? (
           <>
-            <Text style={themedStyles.title}>Profile</Text>
-            <Text style={themedStyles.subtitle}>{user.email}</Text>
+            <View className="flex-row gap-1 mt-4">
+              <Image source={icons.person} style={{ width: 32, height: 32 }} />
+              <Text style={themedStyles.title}>{user.email}</Text>
+            </View>
 
-            <Pressable style={[themedStyles.button, themedStyles.logout]} onPress={logout}>
+            <Text style={[themedStyles.sectionTitle, { marginTop: 24 }]}>
+              Your Watchlist
+            </Text>
+
+            {watchlist?.length ? (
+              <FlatList
+                data={watchlist}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <View className="w-[48%] flex-row items-center justify-between px-4 py-3 mb-4 rounded-xl bg-[#1f2338]">
+                    <Text className="text-light-100 font-semibold text-2xl">
+                      {item}
+                    </Text>
+                    <Pressable onPress={() => removeFromWatchlist(item)}>
+                      <RemoveButton size={28} color="#ef4444" />
+                    </Pressable>
+                  </View>
+                )}
+                className="mt-2 w-full"
+                numColumns={2}
+                columnWrapperStyle={{ justifyContent: "space-between" }}
+                scrollEnabled={false}
+              />
+            ) : (
+              <Text style={themedStyles.muted}>
+                No items yet. Save a stock to see it here.
+              </Text>
+            )}
+
+            <Pressable
+              style={[themedStyles.button, themedStyles.logout]}
+              onPress={signout}
+            >
               <Text style={themedStyles.buttonText}>Sign Out</Text>
             </Pressable>
-
-            <Text style={[themedStyles.sectionTitle, { marginTop: 16 }]}>Your Watchlist</Text>
-            {watchlist?.length ? (
-              watchlist.map((item) => (
-                <Text key={item} style={themedStyles.listItem}>
-                  • {item}
-                </Text>
-              ))
-            ) : (
-              <Text style={themedStyles.muted}>No items yet. Save a stock to see it here.</Text>
-            )}
           </>
         ) : (
           <>
@@ -174,9 +203,10 @@ const styles = (isDark: boolean) =>
       marginBottom: 12,
     },
     sectionTitle: {
-      fontSize: 18,
+      fontSize: 24,
       fontWeight: "700",
       color: isDark ? "#f8fafc" : "#111827",
+      marginTop: 20,
       marginBottom: 8,
       alignSelf: "flex-start",
     },
