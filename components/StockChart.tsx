@@ -40,7 +40,7 @@ export const StockChart: React.FC<StockChartProps> = ({
 
   return (
     <View
-      className="rounded-lg bg-primary my-4 overflow-hidden w-full"
+      className="rounded-lg bg-primary mb-2 overflow-hidden w-full"
       onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
     >
       <LineChart
@@ -77,8 +77,9 @@ export const StockChart: React.FC<StockChartProps> = ({
       }}
       style={{
         marginVertical: 0,
-        paddingRight: 35,
-        borderRadius: 12,
+        paddingRight: 40,
+        paddingLeft: 0,
+        borderRadius: 20,
       }}
       withVerticalLabels={true}
       withHorizontalLabels={true}

@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { fetchStocksOnWatchlist, fetchStockTimeSeries } from "@/services/api";
 import useFetch from "@/services/useFetch";
@@ -27,6 +28,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   const { user, loading, watchlist, logout, removeFromWatchlist } = useAuth();
 
@@ -48,39 +50,45 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 bg-primary">
       <Image source={images.bg} className="absolute w-full z-0" />
+
       {loading ? <Text>Loading...</Text> : ""}
-      {!user ? (
-        <Text className="text-white">Please log in</Text>
-      ) : (
-        <View>
-          <Text className="text-white">Welcome {user.email}</Text>
-          <Pressable onPress={logout}>
-            <Text className="text-white">Log out</Text>
-          </Pressable>
-          <FlatList
-            data={watchlist}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>{item}</Text>
-                <Pressable onPress={() => removeFromWatchlist(item)}>
-                  <Text>Remove</Text>
-                </Pressable>
-              </View>
-            )}
-          />
-        </View>
-      )}
+      <View className="w-1/2 h-auto p-5 mt-16 rounded-full bg-accent">
+        {!user ? (
+          <Text className="text-white">Please Log In</Text>
+        ) : (
+          <View className="flex-col gap-y-2">
+            <Text className="text-white">Welcome {user.email}</Text>
+            <Pressable onPress={logout} className="">
+              <Text className="w-20 p-2 text-white bg-red-400 rounded-full">Log out</Text>
+            </Pressable>
+            <FlatList
+              data={watchlist}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>{item}</Text>
+                  <Pressable onPress={() => removeFromWatchlist(item)}>
+                    <Text>Remove</Text>
+                  </Pressable>
+                </View>
+              )}/>
+          </View>
+            
+            
+        )}
+      </View>
 
       <ScrollView
         className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
+        alwaysBounceVertical={false}
+        overScrollMode="never"
+        contentContainerStyle={{ paddingBottom: insets.bottom + 16, flexGrow: 1 }}
       >
         <Image
           source={icons.logo}
@@ -105,7 +113,7 @@ export default function HomeScreen() {
                   : ""}
           </Text>
         ) : (
-          <View className="flex-1 mt-5">
+          <View className="mt-5">
             <SearchBar
               placeholder="Search for stocks..."
               onPress={() => router.push("/Search")}
@@ -147,7 +155,7 @@ export default function HomeScreen() {
                   paddingRight: 5,
                   marginBottom: 10,
                 }}
-                className="mt-2 pb-32"
+                className="mt-2"
                 scrollEnabled={false}
               />
             </View>

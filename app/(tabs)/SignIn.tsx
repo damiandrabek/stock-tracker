@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import React, { useState } from "react";
 import {
   View,
@@ -59,7 +58,7 @@ export default function LoginScreen() {
           secureTextEntry
           style={themedStyles.input}
         />
-        <View className="flex-row space-x-4">
+        <View className="flex-row gap-x-4">
           <Pressable style={themedStyles.button} onPress={handleSignUp}>
             <Text style={themedStyles.buttonText}>Register</Text>
           </Pressable>

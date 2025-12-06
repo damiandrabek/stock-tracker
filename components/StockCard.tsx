@@ -21,7 +21,7 @@ const StockCard = ({
           resizeMode="cover"
         />
 
-        <Text className="text-sm  font-bold text-white mt-2">
+        <Text className="text-sm font-bold text-white mt-2">
           {ticker}{" "}
           <Text className="text-green-400">
             ${currentPrice ? currentPrice.toFixed(2) : "N/A"}

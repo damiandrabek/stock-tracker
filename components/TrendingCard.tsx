@@ -6,6 +6,8 @@ import MaskedView from '@react-native-masked-view/masked-view';
 
 import { images } from "@/constants/images";
 
+const BADGE_SIZE = 64;
+
 
 const TrendingCard = ({ stock: { stock_id, name, logo }, index }: TrendingCardProps) => {
   return (
@@ -20,15 +22,18 @@ const TrendingCard = ({ stock: { stock_id, name, logo }, index }: TrendingCardPr
           className="w-32 h-40 rounded-lg"
           resizeMode="cover"
         />
-        <View className="absolute bottom-9 -left-2 px-2 py-1 rounded-full">
+        <View style={styles.badgeContainer}>
           <MaskedView
+            style={styles.maskedView}
             maskElement={
-              <Text style={styles.shadowText} className="font-bold text-white text-6xl">{index + 1}</Text>
+              <View style={styles.badgeMask}>
+                <Text style={styles.shadowText}>{index + 1}</Text>
+              </View>
             }
           >
             <Image
               source={images.rankingGradient}
-              className="size-14"
+              style={styles.badgeImage}
               resizeMode="cover"
             />
           </MaskedView>
@@ -49,15 +54,30 @@ const TrendingCard = ({ stock: { stock_id, name, logo }, index }: TrendingCardPr
 export default TrendingCard;
 
 const styles = StyleSheet.create({
-  shadowText: {
+  badgeContainer: {
     position: 'absolute',
-    zIndex: 1,
-    color: 'rgba(0,0,0,0.95)', // shadow color
+    bottom: 36, // matches tailwind bottom-9
+    left: -8,
+  },
+  maskedView: {
+    width: BADGE_SIZE,
+    height: BADGE_SIZE,
+  },
+  badgeMask: {
+    width: BADGE_SIZE,
+    height: BADGE_SIZE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeImage: {
+    width: BADGE_SIZE,
+    height: BADGE_SIZE,
+  },
+  shadowText: {
+    color: 'rgba(0,0,0,0.95)',
     fontWeight: '800',
-    // slight offset to create shadow effect
-    left: 4,
-    top: 4,
-    // extra text shadow (iOS / Android support varies)
+    fontSize: 44,
+    textAlign: 'center',
     textShadowColor: 'rgba(0,0,0,0.6)',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,

@@ -121,7 +121,7 @@ const StockDetails = () => {
   return (
     <>
       <View className="bg-primary flex-1">
-        <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
+        <ScrollView >
           {stockLoading ? (
             <ActivityIndicator
               size="large"
@@ -133,7 +133,7 @@ const StockDetails = () => {
           ) : (
             <View className="w-full px-5">
 
-              <View className="flex-row items-start justify-between mt-8 gap-2 m-x-6">
+              <View className="flex-row items-start justify-between mt-24 gap-2 m-x-6">
 
                 <View className="flex-col gap-y-[0.5]">
 
@@ -195,12 +195,12 @@ const StockDetails = () => {
               </View>
 
               {/* Time Interval Selector */}
-                <View className="my-2 flex-row flex-wrap gap-2">
+                <View className="my-4 flex-row flex-wrap gap-2">
                   {TIME_RANGES.map((interval) => (
                     <TouchableOpacity
                       key={interval}
                       onPress={() => setSelectedInterval(interval as TimeRange)}
-                      className={`px-3 py-2 rounded-2xl ${
+                      className={`px-3 py-3 rounded-2xl ${
                         selectedInterval === interval
                           ? "bg-accent"
                           : "bg-gray-700"
@@ -208,7 +208,7 @@ const StockDetails = () => {
                       disabled={stockTimeSeriesLoading && selectedInterval === interval}
                     >
                       <Text
-                        className={`text-xs font-semibold ${
+                        className={`text-sm font-semibold ${
                           selectedInterval === interval
                             ? "text-white"
                             : "text-gray-300"
