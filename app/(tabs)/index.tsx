@@ -38,7 +38,10 @@ export default function HomeScreen() {
     error: trendingStocksError,
   } = useFetch(getTrendingStocks);
 
-  const fetchFn = useCallback(() => fetchStocksOnWatchlist(), []);
+  const fetchFn = useCallback(
+    () => fetchStocksOnWatchlist(user && watchlist.length > 0 ? watchlist : undefined),
+    [user?.uid, watchlist]
+  );
   const {
     data: stocks,
     loading: stocksLoading,
@@ -52,16 +55,22 @@ export default function HomeScreen() {
       <Image source={images.bg} className="absolute w-full z-0" />
 
       {loading ? <Text>Loading...</Text> : ""}
-      <View className="w-1/2 h-auto p-5 mt-16 rounded-full bg-accent">
+      <View className="relative w-fit h-auto p-5 mt-16 rounded-3xl bg-accent">
         {!user ? (
           <Text className="text-white">Please Log In</Text>
         ) : (
           <View className="flex-col gap-y-2">
-            <Text className="text-white">Welcome {user.email}</Text>
+            <View className="flex-row gap-1">
+              <Image source={icons.person}/>
+              <Text className="text-slate-100 font-bold">{user.email}</Text>
+            </View>
+
             <Pressable onPress={logout} className="">
-              <Text className="w-20 p-2 text-white bg-red-400 rounded-full">Log out</Text>
+              <Text className="w-fit p-2 text-white font-semibold bg-red-400 rounded-full">
+                Log Out
+              </Text>
             </Pressable>
-            <FlatList
+            {/* <FlatList
               data={watchlist}
               keyExtractor={(item) => item}
               renderItem={({ item }) => (
@@ -76,19 +85,20 @@ export default function HomeScreen() {
                     <Text>Remove</Text>
                   </Pressable>
                 </View>
-              )}/>
+              )}/> */}
           </View>
-            
-            
         )}
       </View>
 
       <ScrollView
-        className="flex-1 px-5"
+        className="flex-1 px-5 pb-40"
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}
         overScrollMode="never"
-        contentContainerStyle={{ paddingBottom: insets.bottom + 16, flexGrow: 1 }}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + 16,
+          flexGrow: 1,
+        }}
       >
         <Image
           source={icons.logo}

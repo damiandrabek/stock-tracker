@@ -51,8 +51,12 @@ export const FINNHUB_CONFIG = {
   },
 };
 
-export const fetchStocksOnWatchlist = async () => {
-  const promises = tickerWatchlist.map(async (ticker) => {
+export const fetchStocksOnWatchlist = async (symbols?: string[]) => {
+  const watchlistSymbols = symbols && symbols.length > 0 ? symbols : tickerWatchlist;
+
+  if (!watchlistSymbols.length) return [];
+
+  const promises = watchlistSymbols.map(async (ticker) => {
     // Fetch profile
     const profileEndpoint = `${FINNHUB_CONFIG.BASE_URL}/stock/profile2?symbol=${encodeURIComponent(ticker)}&token=${FINNHUB_CONFIG.API_KEY}`;
     const profileRes = await fetch(profileEndpoint, {

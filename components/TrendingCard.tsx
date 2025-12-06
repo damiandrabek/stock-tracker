@@ -27,7 +27,12 @@ const TrendingCard = ({ stock: { stock_id, name, logo }, index }: TrendingCardPr
             style={styles.maskedView}
             maskElement={
               <View style={styles.badgeMask}>
-                <Text style={styles.shadowText}>{index + 1}</Text>
+                <Text
+                  style={styles.shadowText}
+                  className="font-bold text-white text-6xl"
+                >
+                  {index + 1}
+                </Text>
               </View>
             }
           >
