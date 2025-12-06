@@ -59,15 +59,15 @@ export default function TabLayout() {
           alignItems: "center",
         },
         tabBarStyle: {
-          backgroundColor: '#0f0D23',
+          backgroundColor: "#0f0D23",
           borderRadius: 50,
           marginHorizontal: 20,
           marginBottom: 36,
           height: 52,
-          position: 'absolute',
-          overflow: 'hidden',
+          position: "absolute",
+          overflow: "hidden",
           borderWidth: 1,
-          borderColor: '#0f0D23',
+          borderColor: "#0f0D23",
         },
       }}
     >
@@ -97,21 +97,18 @@ export default function TabLayout() {
         }}
       />
 
-
       <Tabs.Screen
         name="SignIn"
         options={{
-          title: "Profile",
+          title: "Account",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <>
-              <TabIcon focused={focused} icon={icons.person} title="Profile" />
+              <TabIcon focused={focused} icon={icons.person} title="Account" />
             </>
           ),
         }}
       />
-
-      
     </Tabs>
 
     // </AuthProvider>
